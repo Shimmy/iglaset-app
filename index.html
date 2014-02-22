@@ -1,0 +1,574 @@
+<!doctype html>
+<html>
+<head>
+<title>iGlaset</title>
+<meta charset="utf-8" />
+<meta name="format-detection" content="telephone=no" />
+
+<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1"> 
+<link rel="stylesheet" href="js/jquery.mobile-1.4.1/jquery.mobile-1.4.1.min.css" />
+<link rel="stylesheet" href="css/themes/iglaset.min.css" />
+<link rel="stylesheet" href="css/themes/jquery.mobile.icons.min.css" />
+
+<script src="js/jquery-1.10.2.min.js"></script> 
+
+
+
+<link rel="stylesheet" href="iglaset.css" />
+
+<meta charset="utf-8">
+
+</head>
+<script>
+$(document).bind("mobileinit", function(){
+	$.mobile.defaultPageTransition = "none";
+});
+</script>
+<body >
+
+	<div data-role="header" id="main-header" data-id="main-header" data-position="fixed" data-theme="a"  data-content-theme="c">
+		<h1></h1><img id="logo" src="img/iglaset_g.png" style="margin-left:10px;margin-top:-39px;width:35px;float:left; display:none;" /><a href="#" style="margin-top:0px" data-rel="back" data-icon="back" id="back-button">Back</a> <a id="menu-button" href="#welcome-page" style="margin-top:0px" data-icon="grid">Menu</a>
+		<div style="width:60%;margin-left:auto;margin-right:auto;margin-top:-39px;" id="search-bar">
+			<form id="search-frm" class="search-frm" action="#search-res-page" data-content-theme="a">
+				<input type="search" id="search-str" value="Sökord" title="Sökord" class="search-box text" name="find" value="" data-mini="true" data-theme="a"/>
+			</form>
+		</div>
+		<div style="clear:both;"></div>
+	</div>
+
+
+
+<!-- 					############ WELCOME ########## -->
+
+<div data-role="page" id="welcome-page">
+
+
+	<div data-role="content">
+
+		<div id="welcome" data-theme="a">
+			
+
+			<div style="clear:both;"></div>
+			<div style="width:90%;max-width:300px;padding-top:20px;margin-right:auto; margin-left:auto;">
+				<span id="calculating" style="display:none"><center style="margin-top:15px;"> Kalkylerar rekommendationer <img src="img/ajax-loader.gif"/></center></span>
+				<a href="#categories-page"><img src="img/glasses.png" class="icon left"></a>
+
+				<a href="#recommendations-res-page"><img src="img/grades.png" class="icon right"></a>
+
+ 
+				<div style="clear:both;"></div>
+				<span class="left" style="margin-left:19px;">Kategorier</span>
+				<span class="right" style="margin-right:-8px;">Rekommendationer</span>
+
+				<div style="clear:both;"></div>
+				<a href="#" onclick="purchase_list(1);"><img src="img/categories.png" class="icon left"></a>
+
+				<a href="#" onclick="basement_list(1);"><img src="img/categories.png" class="icon right"></a>
+
+				<div style="clear:both;"></div>
+				<span class="right" style="padding-right:29px;" >Källare</span>
+
+				<span class="left" style="margin-left:18px;">Inköpslista</span>
+
+				<div style="clear:both;"></div>
+
+				<a href="#user-ratings-res-page"><img src="img/profile.png" class="icon left "></a>
+
+				<img src="img/scan.png" onclick="scan();" class="icon right">
+				<div style="clear:both;"></div>
+				<span class="left" style="margin-left:18px;">Dina betyg</span>
+				<span class="right" style="margin-right:21px;">Streckkod</span>		
+				<div style="clear:both;"></div>
+
+
+			</div>
+		</div>
+			<p id="success-login" style="display:none;width:150px;margin:auto auto;margin-top:30px;">
+				<a data-role="button" data-icon="user" data-rel="#login-page" href="#" onclick="logout();">Logga ut</a>
+			</p>
+			
+			<p id="do-login" style="width:150px;margin:auto auto;margin-top:30px;">
+				<a data-role="button" data-icon="user" data-rel="#login-page" href="#login-page">Logga in</a>
+			</p>
+
+	</div>
+
+</div>
+
+<!-- ######################################################################## LOGIN PAGE ########## -->
+
+
+
+
+<div data-role="page" id="login-page" > 
+
+	<div data-role="content" >
+	<h3>Logga in med ditt iglaset-konto</h3>
+		<div id="login-res" data-role="collapsible" data-collapsed="false" data-mini="true" data-theme="a">
+			<h3>Logga in</h3>
+				<p id="login-error" style="display:none;">Felaktigt användarnamn eller lösenord!</p>
+				<div id="login-form">
+				<form id="login-frm">
+					<label for="username">Användarnamn</label>				
+					<input id="username" type="text" class="text" data-mini="true"/>
+					<label for="password">Lösenord</label>				
+					<input id="password" type="password" data-mini="true"/>
+					<input type="submit" value="Logga in" data-mini="true" />
+				</form>
+				</div>
+		</div>
+
+		<div id="login-res" data-role="collapsible" data-collapsed="true" data-mini="true">
+			<h3>Ny användare?</h3>
+
+				<p id="frm-error" style="display:none;">Något gick fel</p>
+				<div id="reg-form">
+				<form id="reg-frm">
+					<input id="reg-username" title="Användarnamn" value="Användarnamn" type="text" class="text" data-mini="true"/>
+					<input id="reg-email" title="Epostadress" value="Epostadress" type="text" class="text" data-mini="true"/>	
+					<label for="reg-password">Välj Lösenord</label>				
+					<input id="reg-password" title="Lösenord" type="password" data-mini="true"/>
+					<label for="reg-password-repeat">Upprepa Lösenord</label>				
+					<input id="reg-password-repeat" title="Upprepa Lösenord" type="password" data-mini="true"/>
+
+					<input type="submit" value="Registrera" data-mini="true"/>
+				</form>
+				</div>
+		</div>		
+	</div>
+
+</div>
+
+
+<!-- ######################################################################## PRODUCER PAGE ########## -->
+
+<div data-role="page" id="producer-page">
+	
+
+	<div data-role="content">
+		<div id="producer-res" >
+			<h3 id="producer-name"></h3>
+			<div style="min-width:150px;max-width:500px;margin-left:auto;margin-right:auto;BORDER:1PX SOLID transparent;">
+				<div style="font-size:0.8em;">
+					<table id="pv-table" style="width:75%">
+						<tr style="">
+						<td>Land</td><td id="pv-country"></td>
+						</tr>
+						<tr>
+						<td>State</td><td id='pv-state'></td>
+						</tr>
+						<tr>
+						<td>Stad</td><td id='pv-town'></td>
+						</tr>
+						<tr>
+						<td>Telefon</td><td id="pv-phone"></td>
+						</tr>				
+						<tr>
+						<td>Adress</td><td id="pv-address"></td>
+						</tr>						
+						<tr>
+						<td>Kontakt</td><td id="pv-contact"></td>
+						</tr>
+						<tr>
+						<td>Webbsida</td><td id="pv-url"></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<input type="hidden" id="pv-producer_id"/>
+			</div>
+			<div style="clear:both;"></div>
+
+			<span class="commercial_desc">
+			<b>Om producenten:</b><br/>
+			<span id="pv-about"></span>
+			</span><br/>
+			<a href="#s" onclick="view_articles_by_producer($('#pv-producer_id').val(),1);" data-role="button">Visa artiklar från denna producent</a>
+		</div>
+	</div>
+
+</div>
+
+<!-- ######################################################################## CATEGORIES ########## -->
+
+
+<div data-role="page" id="categories-page">
+	
+
+	<div data-role="content">
+		<div id="categories-res" >
+			<h3>Kategorier</h3>
+			<ul id="categories" data-role="listview" data-mini="true" data-theme="c"> 
+			</ul>
+		</div>
+	</div>
+
+</div>
+
+<!-- ######################################################################## PURCHASE LIST ########## -->
+
+
+<div data-role="page" id="purchase-list-page">
+<div data-role="popup"  id="scan-choose-popup"  data-mini="true" class="ui-corner-all">
+	<h3>Välj artikel att <span id="add-remove-scan-text"></span></h3>
+	<ul data-role="listview" id="scan-choose-list">
+	</ul>
+</div>
+	<div data-role="content">
+		<div id="purchase-list-res" data-collapsed="false" data-content-theme="c">
+			<h3>Inköpslista</h3>
+			<ul id="purchase-list" data-role="listview" data-icon="false" > 
+			</ul>
+			<div id="purchase-more-button" style="margin-top:30px;"></div>
+			<br/><br/>
+		</div>
+	</div>
+<div data-role="footer" data-position="fixed" style="margin-bottom:44px;" data-theme="a">
+	<div data-role="navbar" data-position="fixed"  data-iconpos="left">
+		<ul>
+			<li><a href="#" onclick="list_scan(1,1)" data-icon="plus">Scanna in en ny artikel</a></li>
+			<li><a href="#" onclick="list_scan(1,2)" data-icon="minus">Scanna bort en artikel</a></li>
+		</ul>
+	</div>	
+</div>
+</div>
+
+
+<!-- ######################################################################## BASEMENT LIST ########## -->
+
+
+<div data-role="page" id="basement-list-page">
+<div data-role="popup"  id="scan-choose-popup2"  data-mini="true" class="ui-corner-all">
+	<h3>Välj artikel att <span id="add-remove-scan-text2"></span></h3>
+	<ul data-role="listview" id="scan-choose-list2">
+	</ul>
+</div>
+	<div data-role="content">
+		<div id="basement-list-res" data-collapsed="false" data-content-theme="c">
+			<h3>Din källare</h3>
+			<ul id="basement-list" data-role="listview" data-icon="false" > 
+			</ul>
+			<div id="basement-more-button" style="margin-top:30px;"></div>
+			<br/><br/>
+		</div>
+	</div>
+<div data-role="footer" data-position="fixed" style="margin-bottom:44px;" data-theme="a">
+	<div data-role="navbar" data-position="fixed"  data-iconpos="left">
+		<ul>
+			<li><a href="#" onclick="list_scan(2,1)" data-icon="plus">Scanna in en ny artikel</a></li>
+			<li><a href="#" onclick="list_scan(2,2)" data-icon="minus">Scanna bort en artikel</a></li>
+		</ul>
+	</div>	
+</div>
+<!--<div style="width:90px;float:left;"><a data-role="button" data-icon="plus" href="#" onclick="list_scan(2,1)"><img style="width:40px" src="img/scan-crop.png"/></a></div>
+<div style="width:90px;float:right;"><a data-role="button" data-icon="minus"  href="#" onclick="list_scan(2,2)"><img style="width:40px" src="img/scan-crop.png"/></a></div>
+-->
+</div>
+
+
+<!-- ######################################################################## SEARCH RESULT ########## -->
+
+<div data-role="page" id="search-res-page">
+
+	<div data-role="content">
+		<div id="search-res"  data-collapsed="false" data-content-theme="c">
+		<h3>Sökresultat</h3>
+			<ul id="articles" data-role="listview" data-icon="false">
+			</ul>
+			<div id="search-res-more-button" style="margin-top:30px;"></div>
+		</div>
+	</div>
+	
+</div>
+
+<!-- ######################################################################## RECOMMENDATIONS RESULT ########## -->
+
+
+
+
+<div data-role="page" id="recommendations-res-page">
+<div data-role="popup" id="settings-popup" data-mini="true" class="ui-corner-all">
+	<h3>Filtrera</h3>
+	<ul data-role="settings" id="category-list">
+	</ul>
+</div>	
+	<div data-role="content">
+		<div id="recommendations-res"  data-collapsed="false" data-content-theme="c">
+		<h3>Dina rekommendationer</h3>
+			<ul id="recommendations" data-role="listview" data-icon="false">
+			</ul>
+			<div id="recommendations-more-button" style="margin-top:30px;"></div>
+		
+		</div>		
+	</div>
+
+</div>
+
+<!-- ######################################################################## USERS RATING RESULT ########## -->
+
+
+
+
+<div data-role="page" id="user-ratings-res-page">
+	
+
+	<div data-role="content">
+		<div id="user-ratings-res"  data-collapsed="false" data-content-theme="c">
+		<h3>Dina betyg</h3>
+			<ul id="user-ratings" data-role="listview" data-icon="false">
+			</ul>
+			<div id="user-ratings-more-button" style="margin-top:30px;"></div>
+		</div>		
+	</div>
+
+</div>
+
+<!-- ######################################################################## ARTICLE PAGE ########## -->
+
+
+
+
+<div data-role="page" id="article-page"> 
+	
+
+	<div data-role="content" >
+		<div id="article-view">
+			<h3 id="av-name"></h3>
+			<div >
+			<div style="float:left;margin-right:15px">
+				<a href='#photopop' data-rel='popup'><img id='av-img' src="img/glasses-crop.png" style="max-width:50px;max-height:200px;" onerror="this.src='img/glasses-crop.png';"/></a>
+			</div>
+			<div style="min-width:150px;max-width:500px;margin-left:auto;margin-right:auto;BORDER:1PX SOLID transparent;">
+				<div style="font-size:0.8em;">
+					<table id="av-table" style="width:73%">
+						<tr style="">
+						<td>Kategori</td><td id="av-category"></td>
+						</tr>
+						<tr>
+						<td>Producent</td><td id='av-producer'></td>
+						</tr>
+						<tr>
+						<td>Alkoholhalt</td><td id='av-alc'></td>
+						</tr>
+						<tr>
+						<td>Årgång</td><td id="av-year"></td>
+						</tr>				
+					</table>
+				</div>
+			</div>
+
+			</div>
+			<div style="clear:both;"></div>
+
+			<span class="commercial_desc">
+			<b>Leverantörens beskrivning:</b><br/>
+			<span id="commercial_desc"></span>
+			</span><br/>
+			<input type='hidden' id='article-id'>
+			<div id='rate-link'>
+				<a href='#popupRate' data-rel='popup' data-position-to='window' data-role='button' data-icon='star' data-transition='pop'>Betygsätt</a>
+			</div>	
+			<div id='list-link' class="list-buttons" style="display:none;">
+				<a href='#' onclick="update_list(1,1,$('#article-id').val(),false);" data-icon="plus" style="width:30%;float:left" data-role="button">Inköpslista</a>
+				<a href='#' onclick="update_list(1,2,$('#article-id').val(),false);" data-icon="minus" style="width:30%;float:right;" data-role="button">Inköpslista</a>
+				<div style="clear:both"></div>
+				<a href='#' onclick="update_list(2,1,$('#article-id').val(),false);" data-icon="plus" style="width:30%;float:left" data-role="button">Källare</a>
+				<a href='#' onclick="update_list(2,2,$('#article-id').val(),false);" data-icon="minus" style="width:30%;float:right;" data-role="button">Källare</a>
+				<div style="clear:both"></div>
+
+			</div>	
+			<a href='#' onclick="suggest_ean($('#article-id').val(), window.localStorage.getItem('latest_scanned_ean'));" data-role="button" id="ean-button" style="display:none;"></a>
+		</div>
+		<div data-role='popup' id='photopop' class='photopopup' style="min-width:100px;min-height:50px;">
+			<img id="av-popup-image" style="min-width:20px;min-height:50px;"/>
+		</div>
+		<div data-role="popup" id="popupRate" class="ui-corner-all" style="width:200px;">
+			<div data-role="content" data-theme="a" data-content-theme="a">
+			<h3>Betygsätt</h3>
+			<input name="rating" id="rating-slider" min="0" max="10" value="5" type="range">
+	        <button onclick="rate($('#article-id').val(), $('#rating-slider').val());">Betygsätt</button>		
+	        </div>
+		</div>
+		<div id="comment-list" style="display:none;" data-role="collapsible" data-collapsed="true" data-content-theme="a">
+		<h3>Kommentarer</h3>
+			<ul id='comments' data-role='listview'></ul>
+			<div id="write-comment" style="display:none;margin-top:30px;">
+				<textarea class="text" value="Din kommentar..." name="comment" id="comment" title="Din kommentar..."></textarea>
+				<input type="submit" value="Posta kommentar" data-mini="true" onclick="create_comment($('#article-id').val(), $('#comment').val());"/>
+			</div>
+		</div>
+
+	</div>
+
+</div>
+
+<div data-role="footer" id="main-footer" data-id="main-footer" data-position="fixed" data-theme="a">	
+ <div data-role="controlgroup" data-type="horizontal" style="margin-left:90px;margin-top:2px;"> 
+	<a href="#" data-rel="back" style="text-decoration:none;"><div id="ios-arrow-left" title="Tillbaka"></div></a>
+	<a href="#welcome-page" style="text-decoration:none;"><div id="ios-menu" title="Hem"></div></a>
+	<a href="#" id="settings-button" onclick="settings();" class="ui-btn-right" style="max-width:150px;display:none;height:12px;margin-top:3px;padding-top:6px;" data-role="button" data-icon="gear" >Filter</a>
+
+<!--	<a href="#welcome-page" data-role="button" data-icon="home">Home</a>
+	<a href="index.html" data-role="button" data-rel="back" data-icon="back">Back</a>-->
+	</div>
+	<p style="float:right;margin-top:-21px;margin-right:10px;"><span id="logged-in-user"></span></p>
+</div>
+
+ <script type="text/javascript" src="js/iglaset.js"></script>
+ 
+<script type="text/javascript">
+
+$(document).ready(function() {
+	$( "[data-role='header']" ).toolbar();
+	$( "#main-footer" ).toolbar();
+	$("#rate-link").hide();
+	$("#success-login").hide();
+	$("#back-button").hide();
+	$("#menu-button").hide();	
+	$("#logo").show();
+
+	setInterval(function() {
+		if(window.localStorage.getItem("user_id")) {
+			update_recommendations();
+		}
+	}, 60000*12);
+
+	if (window.localStorage.getItem("token")) {
+		login(window.localStorage.getItem("token"));		
+	}
+
+	$('.search-frm').submit(function(e)
+    {
+    	search_str = $(this).find('input[name="find"]').val();
+    	$(".search-box").val (function () {
+    		return search_str;
+		});
+   		$.mobile.changePage("#search-res-page");
+   		view_articles(search_str, 1);
+   		e.preventDefault();
+   		return false;
+    });
+
+	// Hide footer when focus on text inputs (ios keyboard bug)
+	$("#username, #password, #search-str, #reg-username, #reg-email, #reg-password, #reg-password-repeat").blur(function() {
+		$("#main-footer").show();
+	});	
+
+	$("#search-str, #password, #username, #reg-username, #reg-email, #reg-password, #reg-password-repeat").focus(function() {
+		$("#main-footer").hide();
+	});	
+
+	$("#login-frm").submit(function(e) {
+		login(false);
+   		e.preventDefault();
+   		return false;		
+	});
+
+	$('.text').focus(function () {
+		if ($(this).val() == $(this).attr("title")) {
+			$(this).val("");
+		}
+	}).blur(function () {
+		if ($(this).val() == "") {
+			$(this).val($(this).attr("title"));
+		}
+	});
+	
+
+	// Ugly hack to sign up
+	$("#reg-frm").submit(function(data) {
+			var username = $("#reg-username").val();
+			var email = $("#reg-email").val();
+			var password = $("#reg-password").val();
+			var password_repeat = $("#reg-password-repeat").val();
+			$.post("http://www.iglaset.se/account", {"commit":"Registrera", "name":"", "user[username]":username, "user[password]":password, "user[password_confirmation]":password_repeat, "user[email]":email}, function(data) {
+;
+				var html = $.parseHTML( data );
+				if ($(html).find(".formError").length < 1) {
+					
+					alert("Du är nu registrerad");
+					$("#username").val(username);
+					$("#password").val(password);
+					login();
+				} else {
+					$(html).find(".formError").each(function(error,a) {
+						e = $(a).text();
+						if (e=="should look like an email address.") {
+							e = "Ange en giltig Epostadress";
+						}
+						alert(e);
+					});
+				}
+			});
+			data.preventDefault();
+			return false;
+	});
+
+	
+	document.addEventListener("deviceready", onDeviceReady, false);
+
+    function onDeviceReady() {
+		document.addEventListener("offline", onOffline, false);
+		document.addEventListener("menubutton", doMenu, false);
+    }
+
+    function doMenu() {
+    	welcome();
+    }
+
+    function onOffline() {
+		alert("Du måste ha internetanslutning för att använda appen");	
+	}
+
+  	$(document).delegate('#welcome-page', 'pageshow', function () {
+
+	});    
+  	$(document).delegate('#purchase-list-page', 'pageshow', function () {
+		
+	});
+  	$(document).delegate('#basement-list-page', 'pageshow', function () {
+
+	});	
+  	$(document).delegate('#producer-page', 'pageshow', function () {
+  		if (qs("pid")) {
+  			producer_id = qs("pid");
+  		}
+  		get_producer();
+	});		
+	$(document).delegate('#recommendations-res-page', 'pageshow', function () {
+	    get_recommended_articles(1);
+ 		$("#settings-button").show();
+	});
+	$(document).delegate('#recommendations-res-page', 'pagebeforehide', function () {
+ 		$("#settings-button").hide();
+	});
+	
+	$(document).delegate('#login-page', 'pageshow', function () {
+	});	
+	$(document).delegate('#user-ratings-res-page', 'pageshow', function () {
+	    get_user_ratings(1);
+
+	});	
+	$(document).delegate('#article-page', 'pageshow', function () {
+		if (article_id > 0) {
+			get_article(article_id);
+		}else {
+			get_article(qs("artid"));
+		}
+				
+	});
+	$(document).delegate('#categories-page', 'pageshow', function () {
+  		get_categories();
+	});
+});
+
+</script>
+<script type="text/javascript" src="js/jquery.mobile-1.4.1/jquery.mobile-1.4.1.min.js"></script>
+
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript">
+   // app.initialize();
+</script>
+</body>
+</html>
