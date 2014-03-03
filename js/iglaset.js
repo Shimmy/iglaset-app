@@ -283,6 +283,12 @@ function settings_click(cat, name) {
 var recommended_no_data=true;
 
 function get_recommended_articles(page, cat) {
+	$("#recommendations-reload-button").html("<button onclick='force_calculate_recommendations();'>Kalkylera om rekommendationer</button>").trigger('create');
+	if ($("#calculating").css('display') == 'none') {
+		$("#recommendations-reload-button").show();
+	} else {
+		$("#recommendations-reload-button").hide();
+	}
 	if (recommended_no_data || page!=1) {
 	uid = parseInt(window.localStorage.getItem("user_id"))
 	if ( uid>0) {
@@ -766,13 +772,30 @@ function nl2br (str, is_xhtml) {
     var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';
     return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
 }
-
+function force_calculate_recommendations() {
+	if (window.localStorage.getItem("user_id")>0) {
+		$("#calculating-text").show();
+		$("#calculating").show();
+		$("#recommendations-reload-button").hide();
+		$.get("http://vabba.nu/iglaset/vogoo/test.php?action=calcylate&u="+window.localStorage.getItem("user_id"), function(data) {
+		}).done(function () {
+			$("#calculating-text").hide();
+			$("#calculating").hide();	
+			recommended_no_data=true;
+			get_recommended_articles(1);
+		});
+	}
+}
 function update_recommendations() {
 	if (window.localStorage.getItem("user_id")>0) {
+		$("#calculating-text").show();
 		$("#calculating").show();
+		$("#recommendations-reload-button").hide();
 		$.get("http://vabba.nu/iglaset/vogoo/test.php?action=login&u="+window.localStorage.getItem("user_id"), function(data) {
 		}).done(function () {
-			$("#calculating").hide();
+			recommended_no_data=true;			
+			$("#calculating-text").hide();
+			$("#calculating").hide();	
 		});
 	}
 }
