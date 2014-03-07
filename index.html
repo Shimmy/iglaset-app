@@ -90,6 +90,10 @@ $(document).bind("mobileinit", function(){
 			<p id="do-login" style="width:150px;margin:auto auto;margin-top:30px;">
 				<a data-role="button" data-icon="user" data-rel="#login-page" href="#login-page">Logga in</a>
 			</p>
+			<p id="choose-store" style="width:150px;margin:auto auto;margin-top:30px;">
+				<a data-role="button" data-icon="user" data-rel="#stores-res-page" href="#stores-res-page">Välj Systembolag</a>
+			</p>
+			
 
 	</div>
 
@@ -404,6 +408,25 @@ $(document).bind("mobileinit", function(){
 
 </div>
 
+<!-- ######################################################################## Choose systembolag ########## -->
+
+
+
+
+<div data-role="page" id="stores-res-page">
+	
+
+	<div data-role="content">
+		<div id="sotres-res"  data-collapsed="false" data-content-theme="c">
+		<h3>Välj ditt systembolag</h3>
+			<ul id="stores" data-role="listview" data-icon="false">
+			</ul>
+			
+		</div>		
+	</div>
+
+</div>
+
 <div data-role="footer" id="main-footer" data-id="main-footer" data-position="fixed" data-theme="a">	
  <div data-role="controlgroup" data-type="horizontal" style="margin-left:90px;margin-top:2px;"> 
 	<a href="#" data-rel="back" style="text-decoration:none;"><div id="ios-arrow-left" title="Tillbaka"></div></a>
@@ -561,7 +584,10 @@ $(document).ready(function() {
 	});
 	$(document).delegate('#categories-page', 'pageshow', function () {
   		get_categories();
+	});$(document).delegate('#stores-res-page', 'pageshow', function () {
+  		get_stores();
 	});
+
 });
 
 </script>
