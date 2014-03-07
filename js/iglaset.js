@@ -64,6 +64,29 @@ function get_categories() {
 	}
 }
 
+var stores_populated = false;
+
+function get_stores() {
+	if (!stores_populated) {
+		$.mobile.loading('show');
+		$("#stores").html("");
+		$.get("http://iglaset.se/ajax/get_stores", function(xml) {
+			 $(xml).find('record').each(function(){
+			 	store_id = $(this).find("store-id").text();
+			 	store_name = $(this).find("store-name").text();
+			 	$("#stores").append("<li><a onclick='set_preferred_store("+store_id+")' href='#'>"+store_name+"</a></li>").listview("refresh");
+
+			 });
+		}, "xml").always(function () {
+			$.mobile.loading('hide');
+		});
+	}
+}
+function set_preferred_store(store_id) {
+	window.localStorage.setItem("store_id", store_id)	
+	$.mobile.changePage("#welcome-page");
+}
+
 function view_articles(str, page) {
 
 	if (str.length>1) {
@@ -396,6 +419,7 @@ function get_article(artid) {
 	 	var category = $(xml).find('category').text();
 	 	var user_rating = $(xml).find('user_rating').text();
 	 	var estimated_rating = $(xml).find('estimated_rating').text();
+	 	var sb_short_artid = false;
 	 	$("#av-popup-image").attr('src', image);
 	 	$("#article-id").val(art_id);
 	 	if (!user_rating) { user_rating="0";}
@@ -427,8 +451,11 @@ function get_article(artid) {
 		 	var volume = $(this).text();
 		 	if (vol_retired == 2) {
 		 		retired_class = " av-retired";
-		 	} else { retired_class = "";}
-		 	$("#av-table").append("<tr class='av-added"+retired_class+"'><td>"+volume+" ml</td><td>"+vol_price+" Kr / "+vol_sbid+"</td></tr>");
+		 	} else { 
+		 		retired_class = "";
+		 		sb_short_artid = vol_sbid.slice(0,-2);
+		 	}
+		 	$("#av-table").append("<tr class='av-added"+retired_class+"'><td>"+volume+" ml <span class='volumes-stock' id='"+sb_short_artid+"-"+volume+"'/></td><td>"+vol_price+" Kr / "+vol_sbid+"</td></tr>");
 	 	});	 	
 	 	if (parseInt(estimated_rating)>0) {
 		 	$("#av-table").append("<tr class='av-added'><td>Uppskattat betyg</td><td>"+estimated_rating+"</td></tr>");
@@ -454,6 +481,35 @@ function get_article(artid) {
 	 	$("#commercial_desc").html(nl2br(commercial_desc));
 		//$("#article-view").append("<div data-role='popup' id='photopop"+art_id+"' class='photopopup'><img src='"+bigimage+"'/></div><h3>" + $(xml).find("name").text() + "</h3><div class='imgtbl'><div id='img'><a href='#photopop"+art_id+"' data-rel='popup'><img style='max-width:50px' src='"+unescape(image)+"'></a></div><div id='tbl'><table data-role='table' id='my-table' data-mode='repop'><tr><td>Kategori</td><td>"+category+"</td></tr><tr><td>Ursprung</td><td>"+origin+"</td></tr><tr><td>Producer</td><td>"+producer+"</td></tr><tr><td>Alkoholhalt</td><td>"+alc_percent+"</td></tr><tr><td>Årgång</td><td>"+year+"</td></tr><tr><td>Medelbetyg</td><td>"+avg_rating+"</td></tr><tr><td>Antal betyg</td><td>"+ratings+"</td></tr><tr><td>Ditt betyg</td><td>"+user_rating+"</td></tr><tr><td>Ditt upskattade betyg</td><td>"+estimated_rating+"</td></tr></table></div></div><div style='clear:both;'></div><p>"+nl2br(commercial_desc,true)+"</p><div style='clear:both;'></div><input type='hidden' id='article-id' value='"+art_id+"'><div id='rate-link'><a href='#popupRate' data-rel='popup' data-position-to='window' data-role='button' data-icon='star' data-transition='pop'>Betygsätt</a></div>").trigger('create');
 		get_comments(artid);
+
+
+		if (window.localStorage.getItem("store_id")) {
+			var sb_art_ids = [];
+			$(".volumes-stock").each(function(x) {
+				vol_id = $(this).attr('id');
+				parts = vol_id.split("-");
+				sb_art_ids.push(parts[0]);
+			});
+			sb_art_ids = jQuery.unique(sb_art_ids);
+	
+			if (sb_short_artid) {
+				$(sb_art_ids).each(function(v,k) {
+				if (k != "false") {
+					$.get("http://iglaset.se/ajax/get_store_stock?varunr="+k, function (xml) {
+						$(xml).find('record').each(function(){
+							store_id = $(this).find('store-id').text();
+							if (store_id == window.localStorage.getItem("store_id")) {
+								vol = $(this).find('volume').text().match(/[0-9]+/g);
+
+								$("#"+k+"-"+vol).html($(this).find('amount').text());
+							}
+						});
+
+					}, 'xml');
+				}
+			});
+			}
+		}
 		$.mobile.loading('hide');
 
 		//$("#photopop"+art_id).popup().trigger('create');;
