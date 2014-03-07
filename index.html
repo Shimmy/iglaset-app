@@ -83,24 +83,37 @@ $(document).bind("mobileinit", function(){
 
 			</div>
 		</div>
-			<p id="success-login" style="display:none;width:150px;margin:auto auto;margin-top:30px;">
-				<a data-role="button" data-icon="user" data-rel="#login-page" href="#" onclick="logout();">Logga ut</a>
-			</p>
 			
 			<p id="do-login" style="width:150px;margin:auto auto;margin-top:30px;">
 				<a data-role="button" data-icon="user" data-rel="#login-page" href="#login-page">Logga in</a>
 			</p>
-			<p id="choose-store" style="width:150px;margin:auto auto;margin-top:30px;">
-				<a data-role="button" data-icon="user" data-rel="#stores-res-page" href="#stores-res-page">Välj Systembolag</a>
+			<p id="settings-button" style="display:none;width:200px;margin:auto auto;margin-top:30px;">
+				<a data-role="button" data-icon="gear" data-rel="#settings-page" href="#settings-page">Inställningar</a>
 			</p>
 			
 
 	</div>
 
 </div>
+<!-- ######################################################################## SETTINGS PAGE ####### -->
+
+<div data-role="page" id="settings-page" > 
+
+	<div data-role="content" >
+	<h3>Inställningar</h3>
+	<p id="store-button">
+		<a data-role="button" data-icon="gear" data-rel="#stores-res-page" href="#stores-res-page" id="choose-store">Välj systembolag</a>
+	</p>
+	<p id="success-login" style="display:none;">
+		<a data-role="button" data-icon="user" data-rel="#login-page" href="#" onclick="logout();">Logga ut</a>
+	</p>
+		
+	</div>
+
+</div>
+
 
 <!-- ######################################################################## LOGIN PAGE ########## -->
-
 
 
 
@@ -367,7 +380,6 @@ $(document).bind("mobileinit", function(){
 			<div style="clear:both;"></div>
 
 			<span class="commercial_desc">
-			<b>Leverantörens beskrivning:</b><br/>
 			<span id="commercial_desc"></span>
 			</span><br/>
 			<input type='hidden' id='article-id'>
@@ -395,6 +407,11 @@ $(document).bind("mobileinit", function(){
 	        <button onclick="rate($('#article-id').val(), $('#rating-slider').val());">Betygsätt</button>		
 	        </div>
 		</div>
+		<div id="store-list" data-role="collapsible" data-collapsed="true" data-content-theme="a">
+		<h3>Tillgänglighet</h3>
+			<ul id='article-stores' data-filter-reveal="true" data-filter="true" data-role='listview' style="font-size:0.7em;"></ul>
+		</div>
+
 		<div id="comment-list" style="display:none;" data-role="collapsible" data-collapsed="true" data-content-theme="a">
 		<h3>Kommentarer</h3>
 			<ul id='comments' data-role='listview'></ul>
@@ -419,7 +436,7 @@ $(document).bind("mobileinit", function(){
 	<div data-role="content">
 		<div id="sotres-res"  data-collapsed="false" data-content-theme="c">
 		<h3>Välj ditt systembolag</h3>
-			<ul id="stores" data-role="listview" data-icon="false">
+			<ul id="stores" data-filter-placeholder="Sök stad"  data-autodividers="true" data-filter="true" data-inset="true" data-role="listview" data-icon="false" data-filter-reveal="true">
 			</ul>
 			
 		</div>		
@@ -584,8 +601,16 @@ $(document).ready(function() {
 	});
 	$(document).delegate('#categories-page', 'pageshow', function () {
   		get_categories();
-	});$(document).delegate('#stores-res-page', 'pageshow', function () {
+	});
+	$(document).delegate('#stores-res-page', 'pageshow', function () {
   		get_stores();
+	});
+	$(document).delegate('#settings-page', 'pageshow', function () {
+		if (window.localStorage.getItem("store_name")) {
+		$("#choose-store").html(window.localStorage.getItem("store_name"));
+			} else {
+			$("#choose-store").html("Välj systembolag");
+		}
 	});
 
 });

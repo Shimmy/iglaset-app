@@ -34,6 +34,7 @@ function login(havetoken) {
 			$("#login-error").hide();
 			$("#login-res").hide();
 			$("#success-login").show();
+			$("#settings-button").show();			
 			$("#do-login").hide();
 			$.mobile.changePage("#welcome-page");
 			update_recommendations();
@@ -43,6 +44,7 @@ function login(havetoken) {
 	if (havetoken) {
 		$("#logged-in-user").html(window.localStorage.getItem("username"));
 		$("#success-login").show();
+		$("#settings-button").show();					
 		$("#do-login").hide();
 	}
 }
@@ -70,21 +72,28 @@ function get_stores() {
 	if (!stores_populated) {
 		$.mobile.loading('show');
 		$("#stores").html("");
+		var a=0;
 		$.get("http://iglaset.se/ajax/get_stores", function(xml) {
 			 $(xml).find('record').each(function(){
 			 	store_id = $(this).find("store-id").text();
 			 	store_name = $(this).find("store-name").text();
-			 	$("#stores").append("<li><a onclick='set_preferred_store("+store_id+")' href='#'>"+store_name+"</a></li>").listview("refresh");
-
+			 	$("#stores").append('<li><a onclick=\'set_preferred_store("'+store_id+'")\' id=\'store-'+store_id+'\' href=\'#\'>'+store_name+'</a></li>');
+			 	if (a>1000) {
+			 		return false;
+			 	}
+			 	a++;
 			 });
 		}, "xml").always(function () {
+			stores_populated = true;
+			$("#stores").listview('refresh');
 			$.mobile.loading('hide');
 		});
 	}
 }
 function set_preferred_store(store_id) {
 	window.localStorage.setItem("store_id", store_id)	
-	$.mobile.changePage("#welcome-page");
+	window.localStorage.setItem("store_name", $("#store-"+store_id).html());	
+	$.mobile.changePage("#settings-page");
 }
 
 function view_articles(str, page) {
@@ -478,11 +487,18 @@ function get_article(artid) {
 	 	if (parseInt(user_rating)>0) {
 		 	$("#av-table").append("<tr class='av-added'><td>Ditt betyg</td><td><img src='http://www.iglaset.se/images/icons/grade_"+user_rating+"_small.gif' style='margin-top:2px;'></td></tr>");
 	 	}	 		 	
-	 	$("#commercial_desc").html(nl2br(commercial_desc));
+	 	if (commercial_desc.length > 0) {
+	 		$("#commercial_desc").html("<b>Leverantörens beskrivning:</b><br/>"+nl2br(commercial_desc));
+	 	} else {
+	 		$("#commercial_desc").html("");
+	 	}
 		//$("#article-view").append("<div data-role='popup' id='photopop"+art_id+"' class='photopopup'><img src='"+bigimage+"'/></div><h3>" + $(xml).find("name").text() + "</h3><div class='imgtbl'><div id='img'><a href='#photopop"+art_id+"' data-rel='popup'><img style='max-width:50px' src='"+unescape(image)+"'></a></div><div id='tbl'><table data-role='table' id='my-table' data-mode='repop'><tr><td>Kategori</td><td>"+category+"</td></tr><tr><td>Ursprung</td><td>"+origin+"</td></tr><tr><td>Producer</td><td>"+producer+"</td></tr><tr><td>Alkoholhalt</td><td>"+alc_percent+"</td></tr><tr><td>Årgång</td><td>"+year+"</td></tr><tr><td>Medelbetyg</td><td>"+avg_rating+"</td></tr><tr><td>Antal betyg</td><td>"+ratings+"</td></tr><tr><td>Ditt betyg</td><td>"+user_rating+"</td></tr><tr><td>Ditt upskattade betyg</td><td>"+estimated_rating+"</td></tr></table></div></div><div style='clear:both;'></div><p>"+nl2br(commercial_desc,true)+"</p><div style='clear:both;'></div><input type='hidden' id='article-id' value='"+art_id+"'><div id='rate-link'><a href='#popupRate' data-rel='popup' data-position-to='window' data-role='button' data-icon='star' data-transition='pop'>Betygsätt</a></div>").trigger('create');
 		get_comments(artid);
 
-
+		// Check store availibility
+		$("#article-stores").html("");
+		$("#store-list input").val("");
+		$("#store-list input").trigger("change");
 		if (window.localStorage.getItem("store_id")) {
 			var sb_art_ids = [];
 			$(".volumes-stock").each(function(x) {
@@ -496,16 +512,32 @@ function get_article(artid) {
 				$(sb_art_ids).each(function(v,k) {
 				if (k != "false") {
 					$.get("http://iglaset.se/ajax/get_store_stock?varunr="+k, function (xml) {
+						t = $(xml).find("title").first().text().split("\"")[1];
+						$("#article-stores").append("<li data-role='list-divider'>"+t+" (art-nr:"+k+"xx)</li>")
+
 						$(xml).find('record').each(function(){
 							store_id = $(this).find('store-id').text();
+							store_name = $(this).find('store-name').text();
+							amount = $(this).find('amount').text();
+							vol = $(this).find('volume').text().match(/[0-9]+/g);
 							if (store_id == window.localStorage.getItem("store_id")) {
-								vol = $(this).find('volume').text().match(/[0-9]+/g);
-
-								$("#"+k+"-"+vol).html($(this).find('amount').text());
+								$("#"+k+"-"+vol).html(amount);
 							}
+							//if (store_name.split(",")[0] == window.localStorage.getItem("store_name").split(",")[0]) {
+								$("#article-stores").append("<li>"+store_name+"<br/>"+vol+" ml <span class='ui-li-count'>"+amount+"</span></li>");
+						//	}
 						});
-
-					}, 'xml');
+						
+					}, 'xml').always(function() {
+					$("#article-stores").listview("refresh");					
+					if (window.localStorage.getItem("store_name")) {
+						$("#store-list input").val(window.localStorage.getItem("store_name").split(",")[0]);
+					} else {
+						$("#store-list input").val("");
+					}
+					$("#store-list input").trigger("change");
+						
+					});
 				}
 			});
 			}
@@ -541,8 +573,9 @@ function get_comments(artid) {
 			var rating = parseInt($(this).attr('rating'));
 			var nickname = $(this).attr('nickname');
 			var created = $(this).attr('created');	
-			$("#comments").append("<li style='font-size:13px;'><span style='float:left;'><b>"+nickname+"</b><br><font size='0.4em'>"+created.substring(0,4)+"-"+created.substring(4,6)+"-"+created.substring(6,8)+"</font></span><p class='comment-grade'><img src='http://www.iglaset.se/images/icons/grade_"+rating+"_small.gif' style='margin-top:0px;'></p><div style='clear:both;'></div><p class='comment'>"+comment+"</p></div></li>").listview("refresh");
+			$("#comments").append("<li style='font-size:13px;'><span style='float:left;'><b>"+nickname+"</b><br><font size='0.4em'>"+created.substring(0,4)+"-"+created.substring(4,6)+"-"+created.substring(6,8)+"</font></span><p class='comment-grade'><img src='http://www.iglaset.se/images/icons/grade_"+rating+"_small.gif' style='margin-top:0px;'></p><div style='clear:both;'></div><p class='comment'>"+comment+"</p></div></li>");
 		});	
+		$("#comments").listview("refresh");
 		$("#comment-list").show();
 		if(window.localStorage.getItem("token")) {
 			if (window.localStorage.getItem("token").length > 1) {
