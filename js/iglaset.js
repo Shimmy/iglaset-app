@@ -502,13 +502,16 @@ function get_article(artid) {
 		expand: function( event, ui ) {
 		
 			if (!volumes_found) {
-				$('#store-list-message').html("Ingen koppling till systembolaget");
+				$('#store-list-message').html("Artikeln saknar koppling mot systembolaget");
+				$('#store-list .ui-filterable').hide();
 				$("#loading-stock-text").hide();
 			} else if (!window.localStorage.getItem("store_id")) {
 				$('#store-list-message').html("Välj ditt systembolag i inställningar först");
 				$("#loading-stock-text").hide();
+				$('#store-list .ui-filterable').hide();				
 			} else {
 				$("#loading-stock-text").show();
+
 				check_store_avail();	
 			}	
 		}
@@ -547,6 +550,7 @@ function check_store_avail() {
 	$("#article-stores").hide();
 	$("#store-list input").val("");
 	$("#store-list input").trigger("change");
+	$('#store-list .ui-filterable').show();
 
 	if (window.localStorage.getItem("store_id")) {
 		var sb_art_ids = [];
@@ -590,17 +594,19 @@ function check_store_avail() {
 								$("#article-stores").listview("refresh");					
 								if (window.localStorage.getItem("store_name")) {
 									$("#store-list input").val(window.localStorage.getItem("store_name").split(",")[0]);
+		
+																	
 								} else {
 									$("#store-list input").val("");
 								}
 								$("#store-list input").trigger("change");
 								$("#article-stores").show();	
 								$("#loading-stock-text").hide();	
-					    	}
+								//alert($(".ui-li-static.ui-body-inherit.ui-li-has-count").length);
+				    		}
 					    	cnt++;
 					    });
 			});
-		
 	}
 }	
 function get_comments(artid) {	
