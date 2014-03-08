@@ -4,8 +4,8 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.shimmy.iglaset"
-        version   = "1.0.3"
-        versionCode = "249">
+        version   = "1.0.4"
+        versionCode = "250">
 
     <name>iGlaset</name>
 
