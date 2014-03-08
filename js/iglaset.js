@@ -166,16 +166,18 @@ function view_articles_by_producer(pid, page) {
 
 var articles_by_cat_no_data = true;
 var articles_by_cat_no_data_cat = 0;
+var selected_cat = 0;
+var sort_by = "";
 function view_articles_by_cat(cat, page) {
 	$.mobile.changePage("#search-res-page");
 	$.mobile.loading('show');
-
+	selected_cat = cat;
 	if (articles_by_cat_no_data || page!=1 || articles_by_cat_no_data_cat != cat) {
 	if (page==1) {
 		$("#articles").html("");
 		$("#search-res-more-button").hide();		
 	}
-	$.get("http://www.iglaset.se/articles.xml?user_credentials="+window.localStorage.getItem("token")+"&page="+page+"&category="+cat, function(xml) {
+	$.get("http://www.iglaset.se/articles.xml?user_credentials="+window.localStorage.getItem("token")+"&page="+page+"&category="+cat+"&order_by="+sort_by, function(xml) {
 	 	article_line(xml, "articles");
 		$("#search-res-more-button").show();		
 	 	page = parseInt(page)+1;
@@ -285,30 +287,56 @@ function purchase_list(page) {
 	$.mobile.changePage("#purchase-list-page");		
 
 }
-var settings_loaded=false;
-function settings() {
-	if(!settings_loaded) {
+function sorting() {
+	$('#sort-popup').popup("open", {positionTo: '#category-list'});
+
+}
+function sort_click(sort) {
+	$('#sort-popup').popup("close");
+	if (sort == "producer") {
+		sort_name = "Producent";
+	}
+	if (sort == "default") {
+		sort_name = "Skapad";
+	}
+	if (sort == "average") {
+		sort_name = "Medelbetyg";
+	}
+	if (sort == "recommendation") {
+		sort_name = "Rekommendation";
+	}
+	if (sort == "name") {
+		sort_name = "Namn";
+	}
+	
+	$('#sort-button').text("Sortering ("+sort_name+")");	
+	sort_by = sort;
+	view_articles_by_cat(selected_cat, 1);
+}
+var filters_loaded=false;
+function filter() {
+	if(!filters_loaded) {
 		$.get("http://iglaset.se/categories.xml", function(xml) {
-	  	$("#category-list").append("<li><a onclick=\"settings_click(0, 'Alla')\" href='#'>Alla</a></li>");
+	  	$("#category-list").append("<li><a onclick=\"filter_click(0, 'Alla')\" href='#'>Alla</a></li>");
 
 		 $(xml).find('category').each(function(){
 		 	var name = $(this).find('name').text();
 		 	var cat_id = $(this).find('id').text();
-		  	$("#category-list").append("<li><a onclick=\"settings_click("+cat_id+", '"+name+"')\" href='#'>"+name+"</a></li>");
+		  	$("#category-list").append("<li><a onclick=\"filter_click("+cat_id+", '"+name+"')\" href='#'>"+name+"</a></li>");
 
 		});
 		$.mobile.loading('hide');
 		$("#category-list").listview();
-		settings_loaded = true;
+		filters_loaded = true;
 	});
 	}
-	$('#settings-popup').popup("open", {positionTo: '#category-list'});
+	$('#filter-popup').popup("open", {positionTo: '#category-list'});
 
 }
-function settings_click(cat, name) {
+function filter_click(cat, name) {
 //	$.mobile.changePage("#recommendations-res-page");
-	$('#settings-popup').popup("close");
-	$('#settings-button').text("Filter ("+name+")");
+	$('#filter-popup').popup("close");
+	$('#filter-button').text("Filter ("+name+")");
 	recommended_no_data=true;	
 	get_recommended_articles(1, cat);
 }
@@ -593,9 +621,7 @@ function check_store_avail() {
 					    	if (cnt == sb_art_ids.length-1) {
 								$("#article-stores").listview("refresh");					
 								if (window.localStorage.getItem("store_name")) {
-									$("#store-list input").val(window.localStorage.getItem("store_name").split(",")[0]);
-		
-																	
+									$("#store-list input").val(window.localStorage.getItem("store_name").split(",")[0]);															
 								} else {
 									$("#store-list input").val("");
 								}

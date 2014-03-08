@@ -286,7 +286,16 @@ $(document).bind("mobileinit", function(){
 <!-- ######################################################################## SEARCH RESULT ########## -->
 
 <div data-role="page" id="search-res-page">
-
+<div data-role="popup" id="sort-popup" data-mini="true" class="ui-corner-all">
+	<h3>Sortera på</h3>
+	<ul data-role="listview" id="sort-list">
+		<li><a href="#" onclick="sort_click('average')">Medelbetyg</a></li>
+		<li><a href="#" onclick="sort_click('name')">Namn</a></li>
+		<li><a href="#" onclick="sort_click('default')">Skapad datum</a></li>	
+		<li><a href="#" onclick="sort_click('producer')">Producent</a></li>	
+		<li><a href="#" onclick="sort_click('recommendation')">Rekommendation</a></li>	
+	</ul>
+</div>	
 	<div data-role="content">
 		<div id="search-res"  data-collapsed="false" data-content-theme="c">
 		<h3>Sökresultat</h3>
@@ -304,9 +313,9 @@ $(document).bind("mobileinit", function(){
 
 
 <div data-role="page" id="recommendations-res-page">
-<div data-role="popup" id="settings-popup" data-mini="true" class="ui-corner-all">
+<div data-role="popup" id="filter-popup" data-mini="true" class="ui-corner-all">
 	<h3>Filtrera</h3>
-	<ul data-role="settings" id="category-list">
+	<ul data-role="filters" id="category-list">
 	</ul>
 </div>	
 	<div data-role="content">
@@ -450,8 +459,8 @@ $(document).bind("mobileinit", function(){
  <div data-role="controlgroup" data-type="horizontal" style="margin-left:90px;margin-top:2px;"> 
 	<a href="#" data-rel="back" style="text-decoration:none;"><div id="ios-arrow-left" title="Tillbaka"></div></a>
 	<a href="#welcome-page" style="text-decoration:none;"><div id="ios-menu" title="Hem"></div></a>
-	<a href="#" id="settings-button" onclick="settings();" class="ui-btn-right" style="max-width:150px;display:none;height:12px;margin-top:3px;padding-top:6px;" data-role="button" data-icon="gear" >Filter</a>
-
+	<a href="#" id="filter-button" onclick="filter();" class="ui-btn-right" style="max-width:150px;display:none;height:12px;margin-top:3px;padding-top:6px;" data-role="button" data-icon="gear" >Filter</a>
+	<a href="#" id="sort-button" onclick="sorting();" class="ui-btn-right" style="max-width:150px;display:none;height:12px;margin-top:3px;padding-top:6px;" data-role="button" data-icon="gear" >Sortering</a>
 <!--	<a href="#welcome-page" data-role="button" data-icon="home">Home</a>
 	<a href="index.html" data-role="button" data-rel="back" data-icon="back">Back</a>-->
 	</div>
@@ -581,12 +590,19 @@ $(document).ready(function() {
 	});		
 	$(document).delegate('#recommendations-res-page', 'pageshow', function () {
 	    get_recommended_articles(1);
- 		$("#settings-button").show();
+ 		$("#filter-button").show();
 	});
 	$(document).delegate('#recommendations-res-page', 'pagebeforehide', function () {
- 		$("#settings-button").hide();
+ 		$("#filter-button").hide();
 	});
-	
+
+	$(document).delegate('#search-res-page', 'pageshow', function () {
+ 		$("#sort-button").show();
+	});
+	$(document).delegate('#search-res-page', 'pagebeforehide', function () {
+ 		$("#sort-button").hide();
+	});
+
 	$(document).delegate('#login-page', 'pageshow', function () {
 	});	
 	$(document).delegate('#user-ratings-res-page', 'pageshow', function () {
