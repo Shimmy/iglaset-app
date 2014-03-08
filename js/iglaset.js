@@ -497,11 +497,13 @@ function get_article(artid) {
 	 	}
 		//$("#article-view").append("<div data-role='popup' id='photopop"+art_id+"' class='photopopup'><img src='"+bigimage+"'/></div><h3>" + $(xml).find("name").text() + "</h3><div class='imgtbl'><div id='img'><a href='#photopop"+art_id+"' data-rel='popup'><img style='max-width:50px' src='"+unescape(image)+"'></a></div><div id='tbl'><table data-role='table' id='my-table' data-mode='repop'><tr><td>Kategori</td><td>"+category+"</td></tr><tr><td>Ursprung</td><td>"+origin+"</td></tr><tr><td>Producer</td><td>"+producer+"</td></tr><tr><td>Alkoholhalt</td><td>"+alc_percent+"</td></tr><tr><td>Årgång</td><td>"+year+"</td></tr><tr><td>Medelbetyg</td><td>"+avg_rating+"</td></tr><tr><td>Antal betyg</td><td>"+ratings+"</td></tr><tr><td>Ditt betyg</td><td>"+user_rating+"</td></tr><tr><td>Ditt upskattade betyg</td><td>"+estimated_rating+"</td></tr></table></div></div><div style='clear:both;'></div><p>"+nl2br(commercial_desc,true)+"</p><div style='clear:both;'></div><input type='hidden' id='article-id' value='"+art_id+"'><div id='rate-link'><a href='#popupRate' data-rel='popup' data-position-to='window' data-role='button' data-icon='star' data-transition='pop'>Betygsätt</a></div>").trigger('create');
 		get_comments(artid);
+		$("#article-stores").html("");
 		$( "#store-list" ).collapsible({
 		expand: function( event, ui ) {
 		
 			if (!volumes_found) {
 				$('#store-list-message').html("Ingen koppling till systembolaget");
+				$("#loading-stock-text").hide();
 			} else if (!window.localStorage.getItem("store_id")) {
 				$('#store-list-message').html("Välj ditt systembolag i inställningar först");
 				$("#loading-stock-text").hide();
