@@ -409,6 +409,7 @@ function get_user_ratings(page) {
 var producer_id=0;
 function get_article(artid) {
 	$.mobile.loading('show');
+	$("#store-list-message").html("");
    	$.get("http://www.iglaset.se/articles/"+artid+".xml?user_credentials="+window.localStorage.getItem("token"), function(xml) {
 		//$("#article-view").html("");
 	 	var art_id = $(xml).find('article').attr("id");
@@ -453,6 +454,7 @@ function get_article(artid) {
 
 		 	$("#av-table").append("<tr class='av-added'><td>"+tag_type+"</td><td>"+tag_value+"</td></tr>");
 	 	});
+	 	var volumes_found = false;
 	 	$(xml).find("volume").each(function(){
 	 		var vol_price= $(this).attr("price");
 	 		var vol_sbid= $(this).attr("sb_article_id");
@@ -461,10 +463,11 @@ function get_article(artid) {
 		 	if (vol_retired == 2) {
 		 		retired_class = " av-retired";
 		 	} else { 
+	 			volumes_found = true;
 		 		retired_class = "";
 		 		sb_short_artid = vol_sbid.slice(0,-2);
 		 	}
-		 	$("#av-table").append("<tr class='av-added"+retired_class+"'><td>"+volume+" ml <span class='volumes-stock' id='"+sb_short_artid+"-"+volume+"'/></td><td>"+vol_price+" Kr / "+vol_sbid+"</td></tr>");
+		 	$("#av-table").append("<tr class='av-added"+retired_class+"'><td>"+volume+" ml <span class='volumes-stock' id='"+retired_class+sb_short_artid+"-"+volume+"'/></td><td>"+vol_price+" Kr / "+vol_sbid+"</td></tr>");
 	 	});	 	
 	 	if (parseInt(estimated_rating)>0) {
 		 	$("#av-table").append("<tr class='av-added'><td>Uppskattat betyg</td><td>"+estimated_rating+"</td></tr>");
@@ -496,19 +499,27 @@ function get_article(artid) {
 		get_comments(artid);
 		$( "#store-list" ).collapsible({
 		expand: function( event, ui ) {
-			$("#loading-stock-text").show();
-			check_store_avail();			
+		
+			if (!volumes_found) {
+				$('#store-list-message').html("Ingen koppling till systembolaget");
+			} else if (!window.localStorage.getItem("store_id")) {
+				$('#store-list-message').html("Välj ditt systembolag i inställningar först");
+				$("#loading-stock-text").hide();
+			} else {
+				$("#loading-stock-text").show();
+				check_store_avail();	
+			}	
 		}
 		});
 		$('#store-list').collapsible('collapse');
-
-
+	
 		$.mobile.loading('hide');
 
 		//$("#photopop"+art_id).popup().trigger('create');;
 		$("#article-content").show();
 		$("#article-view").show();
 		$("#comment-list").show();
+		$("#store-list").show();
 		$("#article-content").trigger('updatelayout');
 		if (window.localStorage.getItem("user_id")) {
 			$("#rate-link").show();
@@ -534,6 +545,7 @@ function check_store_avail() {
 	$("#article-stores").hide();
 	$("#store-list input").val("");
 	$("#store-list input").trigger("change");
+
 	if (window.localStorage.getItem("store_id")) {
 		var sb_art_ids = [];
 		$(".volumes-stock").each(function(x) {
@@ -545,6 +557,11 @@ function check_store_avail() {
 		var sb_art_ids = sb_art_ids.filter( onlyUnique )
     		var gets = [];
     		var cnt=0;
+    		if (sb_art_ids.length == 0) {
+    			$("#store-list-message").html("Hittade ingen information på systembolaget");
+				$("#loading-stock-text").hide();	
+
+    		}
 			$(sb_art_ids).each(function(v,k) {
 				if (k != "false") {
 					gets.push($.get("http://iglaset.se/ajax/get_store_stock?varunr="+k, function (xml) {
@@ -868,6 +885,8 @@ function f(str, page) {
 function viewarticle(artid) {
 	$("#article-view").hide();
 	$("#comment-list").hide();
+	$("#store-list").hide();
+
 	//$.mobile.changePage('index.html?artid='+artid, { dataUrl : "?artid="+artid+"#article-page", data : { 'artid' : artid }, reloadPage : true, changeHash : true });
 	article_id = artid;
 }

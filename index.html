@@ -407,9 +407,10 @@ $(document).bind("mobileinit", function(){
 	        <button onclick="rate($('#article-id').val(), $('#rating-slider').val());">Betygsätt</button>		
 	        </div>
 		</div>
-		<div id="store-list" data-role="collapsible" data-collapsed="true" data-content-theme="a">
+		<div id="store-list" style="display:none" data-role="collapsible" data-collapsed="true" data-content-theme="a">
 		<h3>Tillgänglighet</h3>
-				<span id="loading-stock-text" ><center style="margin-bottom:20px;">Laddar <img src="img/ajax-loader.gif"/></center></span>		
+				<span id="loading-stock-text" ><center style="margin-bottom:20px;">Laddar <img src="img/ajax-loader.gif"/></center></span>	
+				<span id="store-list-message"></span>	
 			<ul id='article-stores' data-filter-placeholder="Sök stad" data-filter-reveal="true" data-filter="true" data-role='listview' style="font-size:0.7em;"></ul>
 		</div>
 
