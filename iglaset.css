@@ -469,3 +469,8 @@ h3 {
 	background-color: #5c5d5f;
 
 }
+.volumes-stock {
+    font-weight: normal;
+    float:right;
+    margin-right:5px;
+}

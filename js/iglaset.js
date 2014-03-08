@@ -494,54 +494,15 @@ function get_article(artid) {
 	 	}
 		//$("#article-view").append("<div data-role='popup' id='photopop"+art_id+"' class='photopopup'><img src='"+bigimage+"'/></div><h3>" + $(xml).find("name").text() + "</h3><div class='imgtbl'><div id='img'><a href='#photopop"+art_id+"' data-rel='popup'><img style='max-width:50px' src='"+unescape(image)+"'></a></div><div id='tbl'><table data-role='table' id='my-table' data-mode='repop'><tr><td>Kategori</td><td>"+category+"</td></tr><tr><td>Ursprung</td><td>"+origin+"</td></tr><tr><td>Producer</td><td>"+producer+"</td></tr><tr><td>Alkoholhalt</td><td>"+alc_percent+"</td></tr><tr><td>Årgång</td><td>"+year+"</td></tr><tr><td>Medelbetyg</td><td>"+avg_rating+"</td></tr><tr><td>Antal betyg</td><td>"+ratings+"</td></tr><tr><td>Ditt betyg</td><td>"+user_rating+"</td></tr><tr><td>Ditt upskattade betyg</td><td>"+estimated_rating+"</td></tr></table></div></div><div style='clear:both;'></div><p>"+nl2br(commercial_desc,true)+"</p><div style='clear:both;'></div><input type='hidden' id='article-id' value='"+art_id+"'><div id='rate-link'><a href='#popupRate' data-rel='popup' data-position-to='window' data-role='button' data-icon='star' data-transition='pop'>Betygsätt</a></div>").trigger('create');
 		get_comments(artid);
-
-		// Check store availibility
-		$("#article-stores").html("");
-		$("#store-list input").val("");
-		$("#store-list input").trigger("change");
-		if (window.localStorage.getItem("store_id")) {
-			var sb_art_ids = [];
-			$(".volumes-stock").each(function(x) {
-				vol_id = $(this).attr('id');
-				parts = vol_id.split("-");
-				sb_art_ids.push(parts[0]);
-			});
-			sb_art_ids = jQuery.unique(sb_art_ids);
-	
-			if (sb_short_artid) {
-				$(sb_art_ids).each(function(v,k) {
-				if (k != "false") {
-					$.get("http://iglaset.se/ajax/get_store_stock?varunr="+k, function (xml) {
-						t = $(xml).find("title").first().text().split("\"")[1];
-						$("#article-stores").append("<li data-role='list-divider'>"+t+" (art-nr:"+k+"xx)</li>")
-
-						$(xml).find('record').each(function(){
-							store_id = $(this).find('store-id').text();
-							store_name = $(this).find('store-name').text();
-							amount = $(this).find('amount').text();
-							vol = $(this).find('volume').text().match(/[0-9]+/g);
-							if (store_id == window.localStorage.getItem("store_id")) {
-								$("#"+k+"-"+vol).html(amount);
-							}
-							//if (store_name.split(",")[0] == window.localStorage.getItem("store_name").split(",")[0]) {
-								$("#article-stores").append("<li>"+store_name+"<br/>"+vol+" ml <span class='ui-li-count'>"+amount+"</span></li>");
-						//	}
-						});
-						
-					}, 'xml').always(function() {
-					$("#article-stores").listview("refresh");					
-					if (window.localStorage.getItem("store_name")) {
-						$("#store-list input").val(window.localStorage.getItem("store_name").split(",")[0]);
-					} else {
-						$("#store-list input").val("");
-					}
-					$("#store-list input").trigger("change");
-						
-					});
-				}
-			});
-			}
+		$( "#store-list" ).collapsible({
+		expand: function( event, ui ) {
+			$("#loading-stock-text").show();
+			check_store_avail();			
 		}
+		});
+		$('#store-list').collapsible('collapse');
+
+
 		$.mobile.loading('hide');
 
 		//$("#photopop"+art_id).popup().trigger('create');;
@@ -564,7 +525,65 @@ function get_article(artid) {
 		$.mobile.loading('hide');
 		});
 }
-	
+function onlyUnique(value, index, self) { 
+    return self.indexOf(value) === index;
+}
+function check_store_avail() {
+		// Check store availibility
+	$("#article-stores").html("");
+	$("#article-stores").hide();
+	$("#store-list input").val("");
+	$("#store-list input").trigger("change");
+	if (window.localStorage.getItem("store_id")) {
+		var sb_art_ids = [];
+		$(".volumes-stock").each(function(x) {
+			vol_id = $(this).attr('id');
+			parts = vol_id.split("-");
+			sb_art_ids.push(parts[0]);
+		});
+		//sb_art_ids = jQuery.unique(sb_art_ids);
+		var sb_art_ids = sb_art_ids.filter( onlyUnique )
+    		var gets = [];
+    		var cnt=0;
+			$(sb_art_ids).each(function(v,k) {
+				if (k != "false") {
+					gets.push($.get("http://iglaset.se/ajax/get_store_stock?varunr="+k, function (xml) {
+						t = $(xml).find("title").first().text().split("\"")[1];
+						$("#article-stores").append("<li data-role='list-divider'>"+t+" (art-nr:"+k+"xx)</li>")
+
+						$(xml).find('record').each(function(){
+							store_id = $(this).find('store-id').text();
+							store_name = $(this).find('store-name').text();
+							amount = $(this).find('amount').text();
+							vol = $(this).find('volume').text().match(/[0-9]+/g);
+							if (store_id == window.localStorage.getItem("store_id")) {
+								$("#"+k+"-"+vol).html(amount);
+							}
+							//if (store_name.split(",")[0] == window.localStorage.getItem("store_name").split(",")[0]) {
+								$("#article-stores").append("<li>"+store_name+"<br/>"+vol+" ml <span class='ui-li-count'>"+amount+"</span></li>");
+						//	}
+						});
+						
+					}, 'xml'));
+				}
+					    $.when.apply($, gets).then(function() {
+					    	if (cnt == sb_art_ids.length-1) {
+								$("#article-stores").listview("refresh");					
+								if (window.localStorage.getItem("store_name")) {
+									$("#store-list input").val(window.localStorage.getItem("store_name").split(",")[0]);
+								} else {
+									$("#store-list input").val("");
+								}
+								$("#store-list input").trigger("change");
+								$("#article-stores").show();	
+								$("#loading-stock-text").hide();	
+					    	}
+					    	cnt++;
+					    });
+			});
+		
+	}
+}	
 function get_comments(artid) {	
 	$("#comments").html("");
 	$.get("http://www.iglaset.se/articles/"+artid+"/comments.xml", function(xml) {
