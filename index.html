@@ -339,7 +339,15 @@ $(document).bind("mobileinit", function(){
 
 <div data-role="page" id="user-ratings-res-page">
 	
-
+<div data-role="popup" id="sort-ur-popup" data-mini="true" class="ui-corner-all">
+	<h3>Sortera på</h3>
+	<ul data-role="listview" id="sort-list-ur">
+		<li><a href="#" onclick="sort_click('default')">Betygsatt datum</a></li>	
+		<li><a href="#" onclick="sort_click('rating')">Betyg</a></li>
+		<li><a href="#" onclick="sort_click('name')">Namn</a></li>
+		<li><a href="#" onclick="sort_click('producer')">Producent</a></li>	
+	</ul>
+</div>	
 	<div data-role="content">
 		<div id="user-ratings-res"  data-collapsed="false" data-content-theme="c">
 		<h3>Dina betyg</h3>
@@ -597,6 +605,8 @@ $(document).ready(function() {
 	});
 
 	$(document).delegate('#search-res-page', 'pageshow', function () {
+		$('#sort-button').text("Sortering");	
+		sort_by = "";		
  		$("#sort-button").show();
 	});
 	$(document).delegate('#search-res-page', 'pagebeforehide', function () {
@@ -606,9 +616,15 @@ $(document).ready(function() {
 	$(document).delegate('#login-page', 'pageshow', function () {
 	});	
 	$(document).delegate('#user-ratings-res-page', 'pageshow', function () {
+		$('#sort-button').text("Sortering");	
+		sort_by = "";			
+ 		$("#sort-button").show();		
 	    get_user_ratings(1);
-
 	});	
+	$(document).delegate('#user-ratings-res-page', 'pagebeforehide', function () {
+ 		$("#sort-button").hide();
+	});
+
 	$(document).delegate('#article-page', 'pageshow', function () {
 		if (article_id > 0) {
 			get_article(article_id);

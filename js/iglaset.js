@@ -1,8 +1,10 @@
 
-		
+var sort_by = "";
 var article_id = 0;
 var search_str = "";
+var action = "";
 var categories_populated = false;
+var last_producer=0;
 function logout() {
 	
 	window.localStorage.removeItem("token");
@@ -97,7 +99,7 @@ function set_preferred_store(store_id) {
 }
 
 function view_articles(str, page) {
-
+	action = "view_articles";
 	if (str.length>1) {
 		$.mobile.loading('show');
 		$("#comment-list").hide();
@@ -108,7 +110,7 @@ function view_articles(str, page) {
 		}
 
 		$("#search-res").trigger('expand').trigger('updatelayout');
-		$.get("http://www.iglaset.se/articles.xml?user_credentials="+window.localStorage.getItem("token")+"&page="+page+"&search=true&str="+str, function(xml) {
+		$.get("http://www.iglaset.se/articles.xml?order_by="+sort_by+"&user_credentials="+window.localStorage.getItem("token")+"&page="+page+"&search=true&str="+str, function(xml) {
 		 	article_line(xml, "articles");
 			$("#search-res-more-button").show();		
 		 	page = parseInt(page)+1;
@@ -131,7 +133,8 @@ function view_articles(str, page) {
 	}
 }
 function view_articles_by_producer(pid, page) {
-
+	action = "view_articles_by_producer";
+	last_producer = pid;
 	if (page==1) {
 		$("#articles").html("");
 		$("#search-res-more-button").hide();		
@@ -139,7 +142,7 @@ function view_articles_by_producer(pid, page) {
 	$.mobile.changePage("#search-res-page");
 
 	$.mobile.loading('show');
-	$.get("http://www.iglaset.se/articles.xml?user_credentials="+window.localStorage.getItem("token")+"&page="+page+"&producer_id="+pid, function(xml) {
+	$.get("http://www.iglaset.se/articles.xml?order_by="+sort_by+"&user_credentials="+window.localStorage.getItem("token")+"&page="+page+"&producer_id="+pid, function(xml) {
 	 	article_line(xml, "articles");
 		$("#search-res-more-button").show();		
 	 	page = parseInt(page)+1;
@@ -167,8 +170,9 @@ function view_articles_by_producer(pid, page) {
 var articles_by_cat_no_data = true;
 var articles_by_cat_no_data_cat = 0;
 var selected_cat = 0;
-var sort_by = "";
 function view_articles_by_cat(cat, page) {
+	action = "view_articles_by_cat";
+
 	$.mobile.changePage("#search-res-page");
 	$.mobile.loading('show');
 	selected_cat = cat;
@@ -288,16 +292,24 @@ function purchase_list(page) {
 
 }
 function sorting() {
-	$('#sort-popup').popup("open", {positionTo: '#category-list'});
+	if (action == "get_user_ratings") {
+		$('#sort-ur-popup').popup("open", {positionTo: '#category-list'});
+	} else {
+		$('#sort-popup').popup("open", {positionTo: '#category-list'});
+	}
 
 }
 function sort_click(sort) {
-	$('#sort-popup').popup("close");
 	if (sort == "producer") {
 		sort_name = "Producent";
 	}
 	if (sort == "default") {
-		sort_name = "Skapad";
+		if (action == "get_user_ratings")
+		{
+			sort_name = "Betygsatt datum";
+		} else {
+			sort_name = "Skapad";
+		}
 	}
 	if (sort == "average") {
 		sort_name = "Medelbetyg";
@@ -308,10 +320,28 @@ function sort_click(sort) {
 	if (sort == "name") {
 		sort_name = "Namn";
 	}
-	
+	if (sort == "rating") {
+		sort_name = "Betyg";
+	}	
 	$('#sort-button').text("Sortering ("+sort_name+")");	
 	sort_by = sort;
-	view_articles_by_cat(selected_cat, 1);
+	if (action == "view_articles_by_producer") {
+		$('#sort-popup').popup("close");
+
+		view_articles_by_producer(last_producer, 1);
+
+	} else if (action == "view_articles") {
+		$('#sort-popup').popup("close");
+		view_articles($("#search-str").val(), 1);
+
+	} else if (action == "view_articles_by_cat") {
+		$('#sort-popup').popup("close");
+		view_articles_by_cat(selected_cat, 1);
+	} else if (action == "get_user_ratings") {
+		$('#sort-ur-popup').popup("close");
+		ratings_no_data = true;
+		get_user_ratings(1);
+	}
 }
 var filters_loaded=false;
 function filter() {
@@ -396,6 +426,10 @@ function get_recommended_articles(page, cat) {
 
 var ratings_no_data = true;
 function get_user_ratings(page) {
+	action = "get_user_ratings";
+	if (sort_by == "") {
+		sort_by = "date";
+	}
 	uid = parseInt(window.localStorage.getItem("user_id"))
 	if (ratings_no_data || page != 1) {
 		if ( uid>0) {
@@ -406,7 +440,7 @@ function get_user_ratings(page) {
 			}
 			//$("#recommendations-res").trigger('expand').trigger('updatelayout');
 			$.mobile.loading('show');
-			$.get("http://www.iglaset.se/users/"+uid+".xml?page="+page+"&show=ratings&user_credentials="+window.localStorage.getItem("token"), function(xml) {
+			$.get("http://www.iglaset.se/users/"+uid+".xml?page="+page+"&order_by="+sort_by+"&show=ratings&user_credentials="+window.localStorage.getItem("token"), function(xml) {
 				article_line(xml, "user-ratings");
 		
 			 	$("#user-ratings-more-button").show();		
@@ -534,7 +568,7 @@ function get_article(artid) {
 				$('#store-list .ui-filterable').hide();
 				$("#loading-stock-text").hide();
 			} else if (!window.localStorage.getItem("store_id")) {
-				$('#store-list-message').html("Välj ditt systembolag i inställningar först");
+				$('#store-list-message').html("Välj ditt systembolag i <a href='#settings-page'>inställningar</a> först");
 				$("#loading-stock-text").hide();
 				$('#store-list .ui-filterable').hide();				
 			} else {
