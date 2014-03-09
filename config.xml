@@ -5,7 +5,7 @@
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.shimmy.iglaset"
         version   = "1.0.4"
-        versionCode = "250">
+        versionCode = "251">
 
     <name>iGlaset</name>
 
