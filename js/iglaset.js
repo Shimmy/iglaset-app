@@ -811,12 +811,14 @@ function ean(ean) {
 }
 
 function suggest_ean(artid, ean) {
-	$.post("http://www.iglaset.se/barcodes/suggest_ean.xml?user_credentials="+window.localStorage.getItem("token"), {"article_id":artid, "ean":ean}, function(xml) {
-		
-	}).always(function(){
-		alert("Artikel kopplad till streckkod.\nTack för ditt bidrag!");
-	});
-	window.localStorage.removeItem("latest_scanned_ean");
+	if (confirm("Är du säker på att du vill koppla EAN till artikel?")) {
+		$.post("http://www.iglaset.se/barcodes/suggest_ean.xml?user_credentials="+window.localStorage.getItem("token"), {"article_id":artid, "ean":ean}, function(xml) {
+			
+		}).always(function(){
+			alert("Artikel kopplad till streckkod.\nTack för ditt bidrag!");
+		});
+		window.localStorage.removeItem("latest_scanned_ean");
+	}
 }
 
 function welcome() {
