@@ -733,16 +733,22 @@ function article_line(xml, htmlid) {
 	 		var estimated_rating_icon = "";
 	 		var avg_rating_icon = "";
 
-
- 		if (parseInt(user_rating) > 0 ) {
- 			user_rating_icon = "<span class='ui-li-count count-second'>Ditt betyg "+user_rating+"</span>";
- 		}
  		if (parseInt(est_rate) > 0 ) {
+	 		if (parseInt(user_rating) > 0 ) {
+	 			user_rating_icon = "<span class='ui-li-count count-first'>Ditt betyg "+user_rating+"</span>";
+	 		}
+	 		if (parseInt(avg_rating) > 0 ) {
+	 			avg_rating_icon = "<span class='ui-li-count count-second'>Medelbetyg "+avg_rating+"</span>";
+	 		}	  					 	
  			estimated_rating_icon = "<span class='ui-li-count count-third'>Upskattat betyg "+est_rate+"</span>";
- 		}	 
- 		if (parseInt(avg_rating) > 0 ) {
- 			avg_rating_icon = "<span class='ui-li-count count-first'>Medelbetyg "+avg_rating+"</span>";
- 		}	  					 	
+ 		} else {
+ 			if (parseInt(user_rating) > 0 ) {
+	 			user_rating_icon = "<span class='ui-li-count count-second'>Ditt betyg "+user_rating+"</span>";
+	 		}
+	 		if (parseInt(avg_rating) > 0 ) {
+	 			avg_rating_icon = "<span class='ui-li-count count-third'>Medelbetyg "+avg_rating+"</span>";
+	 		}	 
+ 		}
 	 	if (htmlid == "purchase-list" || htmlid == "basement-list") {
 	 		var quantity = $(this).find('quantity').text();
 	 		var est_rate = $(this).find('estimated_rating').text();
