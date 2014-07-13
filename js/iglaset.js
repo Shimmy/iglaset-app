@@ -592,6 +592,7 @@ function get_article(artid) {
 			$("#rate-link").show();
 			$(".list-buttons").show();
 		}
+		$("#ean-button").hide();
 		if (window.localStorage.getItem("latest_scanned_ean")) 
 		{
 			$("#ean-button").text("Koppla till senast scannad streckkod");
