@@ -594,7 +594,7 @@ function get_article(artid) {
 		}
 		if (window.localStorage.getItem("latest_scanned_ean")) 
 		{
-			$("#ean-button").text("Koppla till senast scannad streckkod"));
+			$("#ean-button").text("Koppla till senast scannad streckkod");
 			$("#ean-button").show();
 			window.localStorage.removeItem("latest_scanned_ean");
 
