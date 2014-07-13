@@ -594,8 +594,10 @@ function get_article(artid) {
 		}
 		if (window.localStorage.getItem("latest_scanned_ean")) 
 		{
-			$("#ean-button").text("Koppla EAN "+window.localStorage.getItem("latest_scanned_ean"));
+			$("#ean-button").text("Koppla till senast scannad streckkod"));
 			$("#ean-button").show();
+			window.localStorage.removeItem("latest_scanned_ean");
+
 		}
 		$("#article-view").trigger('expand').trigger('updatelayout');
 
@@ -688,6 +690,8 @@ function get_comments(artid) {
 		}
 	}).fail(function () {
 		$("#comments").append("<li>Inga kommentarer än</li>").listview("refresh");
+		$("#write-comment").show();
+
 	});
 	
 }
