@@ -542,10 +542,10 @@ function get_article(artid) {
  				estimated_rating_icon = "<span class='badge badge-est-rating '>"+estimated_rating+" <span class='glyphicon glyphicon-thumbs-down'></span></span>";
  			}
 	 	if (parseInt(user_rating)>0) {
-		 	$("#av-table").append("<tr class='av-added'><td>Ditt betyg</td><td><div class='badges'>"+user_rating_icon+"</div></td></tr>");
+		 	$("#av-table").append("<tr class='av-added'><td>Ditt betyg</td><td>"+user_rating_icon+"</td></tr>");
 	 	}	
 	 	if (parseInt(estimated_rating)>0) {
-		 	$("#av-table").append("<tr class='av-added'><td>Uppskattat betyg</td><td><div class='badges'>"+estimated_rating_icon+"</div></td></tr>");
+		 	$("#av-table").append("<tr class='av-added'><td>Uppskattat betyg</td><td>"+estimated_rating_icon+"</td></tr>");
 	 	} else {
 			// Get estimated rating if not exists
 			uid = parseInt(window.localStorage.getItem("user_id"))
@@ -555,13 +555,13 @@ function get_article(artid) {
 				} else {
 					thumb = "down";
 				}
-			 	$("#av-table").append("<tr class='av-added'><td>Uppskattat betyg</td><td><div class='badges'><span class='badge badge-est-rating '>"+(data.rating)+" <span class='glyphicon glyphicon-thumbs-"+thumb+"'></span></span></div></td></tr>");			 
+			 	$("#av-table").append("<tr class='av-added'><td>Uppskattat betyg</td><td><span class='badge badge-est-rating '>"+(data.rating)+" <span class='glyphicon glyphicon-thumbs-"+thumb+"'></span></span></td></tr>");			 
 
 			}).fail(function(d,c) {
 			});
 	 	}
 	 	if (parseInt(avg_rating)>0) {
-		 	$("#av-table").append("<tr class='av-added'><td>Medelbetyg</td><td><div class='badges'>"+avg_rating_icon+"</div></td></tr>");
+		 	$("#av-table").append("<tr class='av-added'><td>Medelbetyg</td><td>"+avg_rating_icon+"</td></tr>");
 	 	}	 		 	
 
 	 	if (parseInt(ratings)>0) {
