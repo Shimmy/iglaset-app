@@ -589,7 +589,7 @@ a.label:focus {
   min-width: 10px;
   padding: 3px 7px;
   font-size: 12px;
-
+  font-weight: bold;
   color: #ffffff;
   line-height: 1;
   vertical-align: baseline;
@@ -680,7 +680,8 @@ a.list-group-item.active > .badge,
   font-style: normal;
   font-weight: normal;
   line-height: 1;
-
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 .glyphicon-asterisk:before {
   content: "\2a";
@@ -1323,6 +1324,7 @@ a.list-group-item.active > .badge,
     -moz-border-radius:0px;
     -webkit-border-radius:0px;
     border-radius:0px;
+    text-shadow: 0px 0px 0px;
 }
   
 .badge:last-child {
