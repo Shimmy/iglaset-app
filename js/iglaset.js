@@ -738,30 +738,44 @@ function article_line(xml, htmlid) {
 	 		var estimated_rating_icon = "";
 	 		var avg_rating_icon = "";
 
- 		if (parseInt(est_rate) > 0 ) {
+	 		user_rating_icon = "<span class='badge badge-user-rating pull-right'>"+user_rating+"  <span class='glyphicon glyphicon-ok'></span></span>";
+	 		avg_rating_icon = "<span class='badge badge-average-rating pull-right'>"+Math.floor(avg_rating)+" <span class='glyphicon glyphicon-stats'></span></span>";
+	 		if (est_rate > 4) {
+ 				estimated_rating_icon = "<span class='badge badge-est-rating pull-right'>"+est_rate+" <span class='glyphicon glyphicon-thumbs-up'></span></span>";
+ 			} else {
+ 				estimated_rating_icon = "<span class='badge badge-est-rating pull-right'>"+est_rate+" <span class='glyphicon glyphicon-thumbs-down'></span></span>";
+ 			}
+ 			if (est_rate == 0) {
+ 				estimated_rating_icon = "";
+ 			}
+ 			 if (user_rating == 0) {
+ 				user_rating_icon = "";
+ 			}
+ 			 if (avg_rating == 0) {
+ 				avg_rating_icon = "";
+ 			}
+ 		/*if (parseInt(est_rate) > 0 ) {
 	 		if (parseInt(user_rating) > 0 ) {
-	 			user_rating_icon = "<span class='ui-li-count count-first'>Ditt betyg "+user_rating+"</span>";
 	 		}
 	 		if (parseInt(avg_rating) > 0 ) {
-	 			avg_rating_icon = "<span class='ui-li-count count-second'>Medelbetyg "+avg_rating+"</span>";
 	 		}	  					 	
- 			estimated_rating_icon = "<span class='ui-li-count count-third'>Upskattat betyg "+est_rate+"</span>";
  		} else {
  			if (parseInt(user_rating) > 0 ) {
-	 			user_rating_icon = "<span class='ui-li-count count-second'>Ditt betyg "+user_rating+"</span>";
+	 			user_rating_icon = "<span class='badge badge-user-rating pull-right'>"+user_rating+"  <span class='glyphicon glyphicon-ok'></span></span>";
+	 			//user_rating_icon = "<span class='ui-li-count count-second'>Ditt betyg "+user_rating+"</span>";
 	 		}
 	 		if (parseInt(avg_rating) > 0 ) {
-	 			avg_rating_icon = "<span class='ui-li-count count-third'>Medelbetyg "+avg_rating+"</span>";
+	 			avg_rating_icon = "<span class='badge badge-average-rating pull-right'>"+Math.floor(avg_rating)+" <span class='glyphicon glyphicon-stats'></span></span>";
 	 		}	 
- 		}
+ 		}*/
 	 	if (htmlid == "purchase-list" || htmlid == "basement-list") {
 	 		var quantity = $(this).find('quantity').text();
 	 		var est_rate = $(this).find('estimated_rating').text();
 	 		var list_comment = $(this).find('list_comment').text();
 
-		  	$("#"+htmlid).append("<li class='article-line'><a href='#article-page' onclick='viewarticle("+artid+")'><div class='thumb-wrap'><img style='margin-left:10px;' title='"+image+"' class='artimg' src='img/glasses-crop.png' onerror=\"this.src='img/glasses-crop.png';\"></div>"+name+"<br/><font style='font-size:11px;font-weight:normal;'>"+producer+"<br>Din kommentar: "+list_comment+"</font><span class='ui-li-count count-first'>"+quantity+" st</span>"+user_rating_icon+estimated_rating_icon+"</span></a></li>");
+		  	$("#"+htmlid).append("<li class='article-line'><a href='#article-page' onclick='viewarticle("+artid+")'><div class='thumb-wrap'><img style='margin-left:10px;' title='"+image+"' class='artimg' src='img/glasses-crop.png' onerror=\"this.src='img/glasses-crop.png';\"></div>"+name+"<br/><font style='font-size:11px;font-weight:normal;'>"+producer+"<br>Din kommentar: "+list_comment+"</font><span class='ui-li-count count-first'>"+quantity+" st</span><div class='badges'>"+user_rating_icon+estimated_rating_icon+"</div></a></li>");
 	 	} else {
-		  	$("#"+htmlid).append("<li class='article-line'><a href='#article-page' onclick='viewarticle("+artid+")'><div class='thumb-wrap'><img style='margin-left:10px;' title='"+image+"' class='artimg' src='img/glasses-crop.png' onerror=\"this.src='img/glasses-crop.png';\"></div>"+name+"<br/><font style='font-size:11px;font-weight:normal;'>"+producer+"<br>"+origin+" "+origin_country+" "+alc_percent+"</font>"+avg_rating_icon+user_rating_icon+estimated_rating_icon+"</a></li>");
+		  	$("#"+htmlid).append("<li class='article-line'><a href='#article-page' onclick='viewarticle("+artid+")'><div class='thumb-wrap'><img style='margin-left:10px;' title='"+image+"' class='artimg' src='img/glasses-crop.png' onerror=\"this.src='img/glasses-crop.png';\"></div>"+name+"<br/><font style='font-size:11px;font-weight:normal;'>"+producer+"<br>"+origin+" "+origin_country+" "+alc_percent+"</font><div class='badges'>"+avg_rating_icon+user_rating_icon+estimated_rating_icon+"</div></a></li>");
 	  	}
 	  	$("#"+htmlid).listview("refresh");
 	  	$(".artimg").each(function(d){
