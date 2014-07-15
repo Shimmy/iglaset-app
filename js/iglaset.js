@@ -531,27 +531,43 @@ function get_article(artid) {
 		 	}
 		 	$("#av-table").append("<tr class='av-added"+retired_class+"'><td>"+volume+" ml <span class='volumes-stock' id='"+retired_class+sb_short_artid+"-"+volume+"'/></td><td>"+vol_price+" Kr / "+vol_sbid+"</td></tr>");
 	 	});	 	
+
+
+	 		user_rating_icon = "<span class='badge badge-user-rating '>"+user_rating+"  <span class='glyphicon glyphicon-ok'></span></span>";
+	 		avg_rating_icon = "<span class='badge badge-average-rating '>"+(avg_rating)+" <span class='glyphicon glyphicon-stats'></span></span>";
+	 		nr_ratings_icon = "<span class='badge badge-nr-ratings '>"+ratings+" <span class='glyphicon glyphicon-star'></span></span>";
+	 		if (estimated_rating > 4) {
+ 				estimated_rating_icon = "<span class='badge badge-est-rating '>"+estimated_rating+" <span class='glyphicon glyphicon-thumbs-up'></span></span>";
+ 			} else {
+ 				estimated_rating_icon = "<span class='badge badge-est-rating '>"+estimated_rating+" <span class='glyphicon glyphicon-thumbs-down'></span></span>";
+ 			}
+	 	if (parseInt(user_rating)>0) {
+		 	$("#av-table").append("<tr class='av-added'><td>Ditt betyg</td><td><div class='badges'>"+user_rating_icon+"</div></td></tr>");
+	 	}	
 	 	if (parseInt(estimated_rating)>0) {
-		 	$("#av-table").append("<tr class='av-added'><td>Uppskattat betyg</td><td>"+estimated_rating+"</td></tr>");
+		 	$("#av-table").append("<tr class='av-added'><td>Uppskattat betyg</td><td><div class='badges'>"+estimated_rating_icon+"</div></td></tr>");
 	 	} else {
 			// Get estimated rating if not exists
 			uid = parseInt(window.localStorage.getItem("user_id"))
-			$.getJSON( "http://www.vabba.nu/iglaset/vogoo/test.php?action=article&u="+uid+"&a="+artid, function( data ) {				
-			 	$("#av-table").append("<tr class='av-added'><td>Uppskattat betyg</td><td>"+data.rating+"</td></tr>");			 
+			$.getJSON( "http://www.vabba.nu/iglaset/vogoo/test.php?action=article&u="+uid+"&a="+artid, function( data ) {		
+				if (data.rating >4) {
+					thumb = "up";
+				} else {
+					thumb = "down";
+				}
+			 	$("#av-table").append("<tr class='av-added'><td>Uppskattat betyg</td><td><div class='badges'><span class='badge badge-est-rating '>"+(data.rating)+" <span class='glyphicon glyphicon-thumbs-"+thumb+"'></span></span></div></td></tr>");			 
 
 			}).fail(function(d,c) {
 			});
 	 	}
 	 	if (parseInt(avg_rating)>0) {
-		 	$("#av-table").append("<tr class='av-added'><td>Medelbetyg</td><td>"+avg_rating+"</td></tr>");
+		 	$("#av-table").append("<tr class='av-added'><td>Medelbetyg</td><td><div class='badges'>"+avg_rating_icon+"</div></td></tr>");
 	 	}	 		 	
 
 	 	if (parseInt(ratings)>0) {
-		 	$("#av-table").append("<tr class='av-added'><td>Antal betyg</td><td>"+ratings+"</td></tr>");
+		 	$("#av-table").append("<tr class='av-added'><td>Antal betyg</td><td>"+nr_ratings_icon+"</td></tr>");
 	 	}	 	
-	 	if (parseInt(user_rating)>0) {
-		 	$("#av-table").append("<tr class='av-added'><td>Ditt betyg</td><td><img src='http://www.iglaset.se/images/icons/grade_"+user_rating+"_small.gif' style='margin-top:2px;'></td></tr>");
-	 	}	 		 	
+ 		 	
 	 	if (commercial_desc.length > 0) {
 	 		$("#commercial_desc").html("<b>Leverantörens beskrivning:</b><br/>"+nl2br(commercial_desc));
 	 	} else {
