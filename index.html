@@ -487,7 +487,6 @@ $(document).ready(function() {
 	$("#back-button").hide();
 	$("#menu-button").hide();	
 	$("#logo").show();
-
 	setInterval(function() {
 		if(window.localStorage.getItem("user_id")) {
 			update_recommendations();
@@ -569,9 +568,7 @@ $(document).ready(function() {
 	document.addEventListener("deviceready", onDeviceReady, false);
 
     function onDeviceReady() {
-		if (parseFloat(window.device.version) === 7.0) {
-		    document.body.style.marginTop = "20px";
-		}
+
 		document.addEventListener("offline", onOffline, false);
 		document.addEventListener("menubutton", doMenu, false);
     }
