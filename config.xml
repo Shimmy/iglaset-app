@@ -24,8 +24,8 @@
     -->
     <preference name="permissions"                value="none"/>
     <preference name="DisallowOverscroll" value="true"/>
-    <plugin name="SplashScreen" value="CDVSplashScreen" />
-
+<preference name="SplashScreen" value="false" />
+<preference name="SplashScreenDelay" value="10" />
     <!-- Customize your app and platform with the preference element. -->
     <preference name="phonegap-version"           value="3.6.3" />          <!-- all: current version of PhoneGap -->
     <preference name="orientation"                value="default" />        <!-- all: default means both landscape and portrait are enabled -->
@@ -65,4 +65,5 @@
     <content src="index.html" />
     <gap:plugin name="com.phonegap.plugins.barcodescanner" />
     <gap:plugin name="org.apache.cordova.device" />
+    <gap:plugin name="org.apache.cordova.splashscreen" />
 </widget>
