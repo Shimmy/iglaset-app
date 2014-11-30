@@ -836,7 +836,7 @@ function urldecode(str) {
 function ean(ean) {
 //	$.mobile.loading('show');
 	$("#articles").html("");
-	$.get("http://beta.iglaset.se/barcodes/show_by_ean/"+ean+"?user_credentials="+window.localStorage.getItem("token"), function(xml) {
+	$.get("http://beta.iglaset.se/barcodes/show_by_ean/"+ean+".xml?user_credentials="+window.localStorage.getItem("token"), function(xml) {
 	 	article_line(xml, "articles");
 	//	$.mobile.loading('hide');
 		$("#search-res").show();
@@ -879,7 +879,7 @@ function list_scan(list, incdec) {
 
 	cordova.plugins.barcodeScanner.scan(
 		function (result) {
-			$.get("http://beta.iglaset.se/barcodes/show_by_ean/"+result.text+"?user_credentials="+window.localStorage.getItem("token"), function(xml) {
+			$.get("http://beta.iglaset.se/barcodes/show_by_ean/"+result.text+".xml?user_credentials="+window.localStorage.getItem("token"), function(xml) {
 //		$.get("http://www.iglaset.se/barcodes/show_by_ean/72063002?user_credentials="+window.localStorage.getItem("token"), function(xml) {
 			 	
 				if ($(xml).find('article').length <1) {
