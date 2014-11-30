@@ -569,6 +569,7 @@ $(document).ready(function() {
 	document.addEventListener("deviceready", onDeviceReady, false);
 
     function onDeviceReady() {
+    	StatusBar.overlaysWebView(true);
 		document.addEventListener("offline", onOffline, false);
 		document.addEventListener("menubutton", doMenu, false);
     }

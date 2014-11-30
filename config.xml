@@ -23,7 +23,7 @@
         permission on your app, which PhoneGap requires.
     -->
     <preference name="permissions"                value="none"/>
-    <preference name="DisallowOverscroll" value="true"/>
+    <preference name="DisallowOverscroll" value="false"/>
 
 
     <!-- Customize your app and platform with the preference element. -->
