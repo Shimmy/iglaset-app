@@ -568,6 +568,7 @@ $(document).ready(function() {
 	document.addEventListener("deviceready", onDeviceReady, false);
 
     function onDeviceReady() {
+    	navigator.splashscreen.hide();
 		if (parseFloat(window.device.version) === 7.0) {
 		    	$("#main-header").addClass("sug");
 		}
@@ -658,6 +659,7 @@ $(document).ready(function() {
 <script type="text/javascript" src="js/index.js"></script>
 <script type="text/javascript">
    // app.initialize();
+navigator.splashscreen.hide();
 </script>
 </body>
 </html>
