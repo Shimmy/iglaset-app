@@ -19,7 +19,7 @@ function login(havetoken) {
 	if (!havetoken) {
 	username = $("#username").val();
 	password = $("#password").val();
-	$.post("http://www.iglaset.se/user_session.xml", { "user_session[username]": username, "user_session[password]": password }, function(xml) {
+	$.post("http://beta.iglaset.se/user_sessions.xml", { "user_session[username]": username, "user_session[password]": password }, function(xml) {
 		if ($(xml).find('result').text() != "Success") {
 			window.localStorage.removeItem("token");
 			window.localStorage.removeItem("user_id");
@@ -55,7 +55,7 @@ function get_categories() {
 	if (!categories_populated) {
 		$.mobile.loading('show');
 		$("#categories").html("");
-		$.get("http://iglaset.se/categories.xml", function(xml) {
+		$.get("http://beta.iglaset.se/categories.xml", function(xml) {
 		 $(xml).find('category').each(function(){
 		 	var name = $(this).find('name').text();
 		 	var cat_id = $(this).find('id').text();
@@ -75,8 +75,8 @@ function get_stores() {
 		$.mobile.loading('show');
 		$("#stores").html("");
 		var a=0;
-		$.get("http://iglaset.se/ajax/get_stores", function(xml) {
-			 $(xml).find('record').each(function(){
+		$.get("http://beta.iglaset.se/ajax/get_stores", function(xml) {
+			 $(xml).find('object').each(function(){
 			 	store_id = $(this).find("store-id").text();
 			 	store_name = $(this).find("store-name").text();
 			 	$("#stores").append('<li><a onclick=\'set_preferred_store("'+store_id+'")\' id=\'store-'+store_id+'\' href=\'#\'>'+store_name+'</a></li>');
@@ -110,7 +110,7 @@ function view_articles(str, page) {
 		}
 
 		$("#search-res").trigger('expand').trigger('updatelayout');
-		$.get("http://www.iglaset.se/articles.xml?order_by="+sort_by+"&user_credentials="+window.localStorage.getItem("token")+"&page="+page+"&search=true&str="+str, function(xml) {
+		$.get("http://beta.iglaset.se/articles.xml?order_by="+sort_by+"&user_credentials="+window.localStorage.getItem("token")+"&page="+page+"&search=true&str="+str, function(xml) {
 		 	article_line(xml, "articles");
 			$("#search-res-more-button").show();		
 		 	page = parseInt(page)+1;
@@ -142,7 +142,7 @@ function view_articles_by_producer(pid, page) {
 	$.mobile.changePage("#search-res-page");
 
 	$.mobile.loading('show');
-	$.get("http://www.iglaset.se/articles.xml?order_by="+sort_by+"&user_credentials="+window.localStorage.getItem("token")+"&page="+page+"&producer_id="+pid, function(xml) {
+	$.get("http://beta.iglaset.se/articles.xml?order_by="+sort_by+"&user_credentials="+window.localStorage.getItem("token")+"&page="+page+"&producer_id="+pid, function(xml) {
 	 	article_line(xml, "articles");
 		$("#search-res-more-button").show();		
 	 	page = parseInt(page)+1;
@@ -181,7 +181,7 @@ function view_articles_by_cat(cat, page) {
 		$("#articles").html("");
 		$("#search-res-more-button").hide();		
 	}
-	$.get("http://www.iglaset.se/articles.xml?user_credentials="+window.localStorage.getItem("token")+"&page="+page+"&category="+cat+"&order_by="+sort_by, function(xml) {
+	$.get("http://beta.iglaset.se/articles.xml/cat/?user_credentials="+window.localStorage.getItem("token")+"&page="+page+"&category="+cat+"&order_by="+sort_by, function(xml) {
 	 	article_line(xml, "articles");
 		$("#search-res-more-button").show();		
 	 	page = parseInt(page)+1;
@@ -220,7 +220,7 @@ function basement_list(page) {
 		$("#basement-list").html("");
 	}
 	$.mobile.loading('show');
-	$.get("http://iglaset.se/users/"+uid+".xml?show=basement&user_credentials="+window.localStorage.getItem("token")+"&page="+page, function(xml) {
+	$.get("http://beta.iglaset.se/users/"+uid+".xml?show=basement&user_credentials="+window.localStorage.getItem("token")+"&page="+page, function(xml) {
 	 	article_line(xml, "basement-list");
 		$("#basement-more-button").show();		
 	 	page = parseInt(page)+1;
@@ -260,7 +260,7 @@ function purchase_list(page) {
 			}
 
 			$.mobile.loading('show');
-			$.get("http://iglaset.se/users/"+uid+".xml?show=purchase&user_credentials="+window.localStorage.getItem("token")+"&page="+page, function(xml) {
+			$.get("http://beta.iglaset.se/users/"+uid+".xml?show=purchase&user_credentials="+window.localStorage.getItem("token")+"&page="+page, function(xml) {
 			 	article_line(xml, "purchase-list");
 			 	$("#purchase-more-button").show();		
 			 	page = parseInt(page)+1;
@@ -346,7 +346,7 @@ function sort_click(sort) {
 var filters_loaded=false;
 function filter() {
 	if(!filters_loaded) {
-		$.get("http://iglaset.se/categories.xml", function(xml) {
+		$.get("http://beta.iglaset.se/categories.xml", function(xml) {
 	  	$("#category-list").append("<li><a onclick=\"filter_click(0, 'Alla')\" href='#'>Alla</a></li>");
 
 		 $(xml).find('category').each(function(){
@@ -396,7 +396,7 @@ function get_recommended_articles(page, cat) {
 			} else {
 				catfilter = "category="+cat+"&";
 			}
-		$.get("http://iglaset.se/articles.xml?"+catfilter+"page="+page+"&order_by=recommendation&user_credentials="+window.localStorage.getItem("token"), function(xml) {			
+		$.get("http://beta.iglaset.se/users/mypage.xml?show=recommendations&"+catfilter+"page="+page+"&order_by=recommendation&user_credentials="+window.localStorage.getItem("token"), function(xml) {			
 			article_line(xml, "recommendations");
 
 		 	$("#recommendations-more-button").show();		
@@ -440,7 +440,7 @@ function get_user_ratings(page) {
 			}
 			//$("#recommendations-res").trigger('expand').trigger('updatelayout');
 			$.mobile.loading('show');
-			$.get("http://www.iglaset.se/users/"+uid+".xml?page="+page+"&order_by="+sort_by+"&show=ratings&user_credentials="+window.localStorage.getItem("token"), function(xml) {
+			$.get("http://beta.iglaset.se/users/"+uid+".xml?page="+page+"&order_by="+sort_by+"&show=ratings&user_credentials="+window.localStorage.getItem("token"), function(xml) {
 				article_line(xml, "user-ratings");
 		
 			 	$("#user-ratings-more-button").show();		
@@ -472,7 +472,7 @@ var producer_id=0;
 function get_article(artid) {
 	$.mobile.loading('show');
 	$("#store-list-message").html("");
-   	$.get("http://www.iglaset.se/articles/"+artid+".xml?user_credentials="+window.localStorage.getItem("token"), function(xml) {
+   	$.get("http://beta.iglaset.se/articles/"+artid+".xml?user_credentials="+window.localStorage.getItem("token"), function(xml) {
 		//$("#article-view").html("");
 	 	var art_id = $(xml).find('article').attr("id");
 	 	var image = urldecode($(xml).find('medium').text());
@@ -651,11 +651,11 @@ function check_store_avail() {
     		}
 			$(sb_art_ids).each(function(v,k) {
 				if (k != "false") {
-					gets.push($.get("http://iglaset.se/ajax/get_store_stock?varunr="+k, function (xml) {
+					gets.push($.get("http://beta.iglaset.se/ajax/get_store_stock?varunr="+k, function (xml) {
 						t = $(xml).find("title").first().text().split("\"")[1];
 						$("#article-stores").append("<li data-role='list-divider'>"+t+" (art-nr:"+k+"xx)</li>")
 
-						$(xml).find('record').each(function(){
+						$(xml).find('object').each(function(){
 							store_id = $(this).find('store-id').text();
 							store_name = $(this).find('store-name').text();
 							amount = $(this).find('amount').text();
@@ -690,7 +690,7 @@ function check_store_avail() {
 }	
 function get_comments(artid) {	
 	$("#comments").html("");
-	$.get("http://www.iglaset.se/articles/"+artid+"/comments.xml", function(xml) {
+	$.get("http://beta.iglaset.se/articles/"+artid+"/comments.xml", function(xml) {
 		$(xml).find('comment').each(function(){
 			var comment = $(this).find('text').text();			
 			var rating = parseInt($(this).attr('rating'));
@@ -714,7 +714,7 @@ function get_comments(artid) {
 }
 
 function rate(art_id, rating) {
-	$.get("http://www.iglaset.se/articles/"+art_id+"/rate.xml?rating="+rating+"&user_credentials="+window.localStorage.getItem("token"), function() {
+	$.get("http://beta.iglaset.se/articles/"+art_id+"/rate.xml?rating="+rating+"&user_credentials="+window.localStorage.getItem("token"), function() {
 
 	});
 	ratings_no_data = true;
@@ -724,7 +724,7 @@ function rate(art_id, rating) {
 
 function create_comment(art_id, comment) {
 	$.mobile.loading('show');
-	$.post("http://www.iglaset.se/comments.xml?user_credentials="+window.localStorage.getItem("token"), {"comment[article_id]":art_id, "comment[text]": comment}, function (data) {		
+	$.post("http://beta.iglaset.se/comments.xml?user_credentials="+window.localStorage.getItem("token"), {"comment[article_id]":art_id, "comment[text]": comment}, function (data) {		
 
 	}).always(function() {
 		$.mobile.loading('hide');
@@ -803,7 +803,7 @@ function article_line(xml, htmlid) {
 function get_producer() {
 	$.mobile.loading('show');
 
-	$.get("http://iglaset.se/producers/"+producer_id+".xml", function(xml) {
+	$.get("http://beta.iglaset.se/producers/"+producer_id+".xml", function(xml) {
 		producer_name = $(xml).find("name").text();
 		address = $(xml).find("address").text();
 		contact = $(xml).find("contact").text();
@@ -836,7 +836,7 @@ function urldecode(str) {
 function ean(ean) {
 //	$.mobile.loading('show');
 	$("#articles").html("");
-	$.get("http://www.iglaset.se/barcodes/show_by_ean/"+ean+"?user_credentials="+window.localStorage.getItem("token"), function(xml) {
+	$.get("http://beta.iglaset.se/barcodes/show_by_ean/"+ean+"?user_credentials="+window.localStorage.getItem("token"), function(xml) {
 	 	article_line(xml, "articles");
 	//	$.mobile.loading('hide');
 		$("#search-res").show();
@@ -853,7 +853,7 @@ function ean(ean) {
 
 function suggest_ean(artid, ean) {
 	if (confirm("Är du säker på att du vill koppla EAN till artikel?")) {
-		$.post("http://www.iglaset.se/barcodes/suggest_ean.xml?user_credentials="+window.localStorage.getItem("token"), {"article_id":artid, "ean":ean}, function(xml) {
+		$.post("http://beta.iglaset.se/barcodes/suggest_ean.xml?user_credentials="+window.localStorage.getItem("token"), {"article_id":artid, "ean":ean}, function(xml) {
 			
 		}).always(function(){
 			alert("Artikel kopplad till streckkod.\nTack för ditt bidrag!");
@@ -879,7 +879,7 @@ function list_scan(list, incdec) {
 
 	cordova.plugins.barcodeScanner.scan(
 		function (result) {
-			$.get("http://www.iglaset.se/barcodes/show_by_ean/"+result.text+"?user_credentials="+window.localStorage.getItem("token"), function(xml) {
+			$.get("http://beta.iglaset.se/barcodes/show_by_ean/"+result.text+"?user_credentials="+window.localStorage.getItem("token"), function(xml) {
 //		$.get("http://www.iglaset.se/barcodes/show_by_ean/72063002?user_credentials="+window.localStorage.getItem("token"), function(xml) {
 			 	
 				if ($(xml).find('article').length <1) {
@@ -930,7 +930,8 @@ function update_list(list, incdec, artid, close_popups) {
 
 	if (list==1) {
 		if (incdec==1) {
-			$.get("http://iglaset.se/purchase/add/"+artid+".xml?user_credentials="+window.localStorage.getItem("token"), function(xml) {
+			//$.get("http://iglaset.se/purchase/add/"+artid+".xml?user_credentials="+window.localStorage.getItem("token"), function(xml) {
+			$.get("http://beta.iglaset.se/articles/"+artid+"/list_modify.xml?list_type=purchase&inc=1&user_credentials="+window.localStorage.getItem("token"), function(xml) {
 			 if (close_popups){
 			  	$('#scan-choose-popup').popup("close");
 			 }
@@ -940,7 +941,7 @@ function update_list(list, incdec, artid, close_popups) {
 				$.mobile.loading('hide');
 			});
 		} else {
-			$.get("http://iglaset.se/user_lists/"+artid+"/change_quantity.xml?article_id="+artid+"&change=dec&user_list_type=purchase&user_credentials="+window.localStorage.getItem("token"), function(xml) {
+			$.get("http://beta.iglaset.se/articles/"+artid+"/list_modify.xml?list_type=purchase&dec=1&user_credentials="+window.localStorage.getItem("token"), function(xml) {
 			 if (close_popups){
 			  	$('#scan-choose-popup').popup("close");
 			 }			 
@@ -953,7 +954,7 @@ function update_list(list, incdec, artid, close_popups) {
 	}
 	else {
 		if (incdec==1) {
-			$.get("http://iglaset.se/basement/add/"+artid+".xml?user_credentials="+window.localStorage.getItem("token"), function(xml) {
+			$.get("http://beta.iglaset.se/articles/"+artid+"/list_modify.xml?list_type=basement&inc=1&user_credentials="+window.localStorage.getItem("token"), function(xml) {
 			 if (close_popups){
 			  	$('#scan-choose-popup2').popup("close");
 			 }
@@ -963,7 +964,7 @@ function update_list(list, incdec, artid, close_popups) {
 				$.mobile.loading('hide');
 			});;
 		} else {
-			$.get("http://iglaset.se/user_lists/"+artid+"/change_quantity.xml?article_id="+artid+"&change=dec&user_list_type=basement&user_credentials="+window.localStorage.getItem("token"), function(xml) {
+			$.get("http://beta.iglaset.se/articles/"+artid+"/list_modify.xml?list_type=basement&dec=1&user_credentials="+window.localStorage.getItem("token"), function(xml) {
 			 if (close_popups){
 			  	$('#scan-choose-popup2').popup("close");
 			 }
