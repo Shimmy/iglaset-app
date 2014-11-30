@@ -20,8 +20,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 	height:73px !important;
 	border:0px !important;
 	/*background-position:0px -23px; */
-	margin-top:20px;
+
 	}
+.sug {
+  margin-top:20px;
+}
 /*
 .ui-header-ios7 {
 background-size: 100% 95px !important; 
