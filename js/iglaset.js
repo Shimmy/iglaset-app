@@ -1016,7 +1016,7 @@ function force_calculate_recommendations() {
 		$("#calculating-text").show();
 		$("#calculating").show();
 		$("#recommendations-reload-button").hide();
-		$.get("http://vabba.nu/iglaset/vogoo/test.php?action=calcylate&u="+window.localStorage.getItem("user_id"), function(data) {
+		$.get("http://vabba.nu/iglaset/vogoo_heroku/api.php?action=update&u="+window.localStorage.getItem("user_id"), function(data) {
 		}).done(function () {
 			$("#calculating-text").hide();
 			$("#calculating").hide();	
@@ -1030,7 +1030,7 @@ function update_recommendations() {
 		$("#calculating-text").show();
 		$("#calculating").show();
 		$("#recommendations-reload-button").hide();
-		$.get("http://vabba.nu/iglaset/vogoo/test.php?action=login&u="+window.localStorage.getItem("user_id"), function(data) {
+		$.get("http://vabba.nu/iglaset/vogoo_heroku/api.php?action=update&u="+window.localStorage.getItem("user_id"), function(data) {
 		}).done(function () {
 			recommended_no_data=true;			
 			$("#calculating-text").hide();

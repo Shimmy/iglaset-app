@@ -491,7 +491,7 @@ $(document).ready(function() {
 		if(window.localStorage.getItem("user_id")) {
 			update_recommendations();
 		}
-	}, 60000*12);
+	}, 60000*720);
 
 	if (window.localStorage.getItem("token")) {
 		login(window.localStorage.getItem("token"));		
@@ -541,7 +541,7 @@ $(document).ready(function() {
 			var email = $("#reg-email").val();
 			var password = $("#reg-password").val();
 			var password_repeat = $("#reg-password-repeat").val();
-			$.post("http://www.iglaset.se/account", {"commit":"Registrera", "name":"", "user[username]":username, "user[password]":password, "user[password_confirmation]":password_repeat, "user[email]":email}, function(data) {
+			$.post("http://beta.iglaset.se/users", {"commit":"Registrera", "name":"", "user[username]":username, "user[password]":password, "user[password_confirmation]":password_repeat, "user[email]":email}, function(data) {
 ;
 				var html = $.parseHTML( data );
 				if ($(html).find(".formError").length < 1) {
