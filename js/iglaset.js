@@ -470,6 +470,7 @@ function get_user_ratings(page) {
 
 var producer_id=0;
 function get_article(artid) {
+
 	$.mobile.loading('show');
 	$("#store-list-message").html("");
    	$.get("http://www.iglaset.se/articles/"+artid+".xml?user_credentials="+window.localStorage.getItem("token"), function(xml) {
@@ -612,8 +613,7 @@ function get_article(artid) {
 		if (window.localStorage.getItem("latest_scanned_ean")) 
 		{
 			$("#ean-button").text("Koppla till senast scannad streckkod");
-			$("#ean-button").show();
-			window.localStorage.removeItem("latest_scanned_ean");
+			$("#ean-button").show();			
 
 		}
 		$("#article-view").trigger('expand').trigger('updatelayout');
@@ -852,13 +852,17 @@ function ean(ean) {
 }
 
 function suggest_ean(artid, ean) {
-	if (confirm("Är du säker på att du vill koppla EAN till artikel?")) {
-		$.post("http://www.iglaset.se/barcodes/suggest_ean.xml?user_credentials="+window.localStorage.getItem("token"), {"article_id":artid, "ean":ean}, function(xml) {
-			
-		}).always(function(){
-			alert("Artikel kopplad till streckkod.\nTack för ditt bidrag!");
-		});
-		window.localStorage.removeItem("latest_scanned_ean");
+	if (ean) {
+		if (confirm("Är du säker på att du vill koppla EAN till artikel?"+ean)) {
+			$.post("http://www.iglaset.se/barcodes/suggest_ean.xml?user_credentials="+window.localStorage.getItem("token"), {"article_id":artid, "ean":ean}, function(xml) {
+				
+			}).always(function(){
+				alert("Artikel kopplad till streckkod.\nTack för ditt bidrag!");
+			});
+			window.localStorage.removeItem("latest_scanned_ean");
+		}
+	} else {
+		alert("Ingen streckkod skannad")
 	}
 }
 
