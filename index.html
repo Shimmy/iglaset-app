@@ -541,7 +541,7 @@ $(document).ready(function() {
 			var email = $("#reg-email").val();
 			var password = $("#reg-password").val();
 			var password_repeat = $("#reg-password-repeat").val();
-			$.post("http://beta.iglaset.se/users", {"commit":"Registrera", "name":"", "user[username]":username, "user[password]":password, "user[password_confirmation]":password_repeat, "user[email]":email}, function(data) {
+			$.post("http://www.iglaset.se/users", {"commit":"Registrera", "name":"", "user[username]":username, "user[password]":password, "user[password_confirmation]":password_repeat, "user[email]":email}, function(data) {
 ;
 				var html = $.parseHTML( data );
 				if ($(html).find(".formError").length < 1) {
