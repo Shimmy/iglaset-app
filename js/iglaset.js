@@ -117,7 +117,7 @@ function view_articles(str, page) {
 		 	page = parseInt(page)+1;
 		 	var tot_art = $(xml).find('articles').attr("total_articles");
 		 	pages = tot_art/page_size;
-		 	if (pages < (page-1)) {
+			if (pages <= (page-1)) {
 					$("#search-res-more-button").hide();
 			}
       $("#search-res-more-button").html("<button onclick='view_articles(\""+str+"\","+page+");'>Hämta fler (visar "+(page-1)*page_size+" av "+tot_art+")</button>").trigger('create');
