@@ -100,6 +100,7 @@ function set_preferred_store(store_id) {
 
 function view_articles(str, page) {
 	action = "view_articles";
+	page_size = 20;
 	if (str.length>1) {
 		$.mobile.loading('show');
 		$("#comment-list").hide();
@@ -115,13 +116,14 @@ function view_articles(str, page) {
 			$("#search-res-more-button").show();
 		 	page = parseInt(page)+1;
 		 	var tot_art = $(xml).find('articles').attr("total_articles");
-		 	pages = tot_art/10;
+		 	pages = tot_art/page_size;
 		 	if (pages < (page-1)) {
 					$("#search-res-more-button").hide();
 			}
-      $("#search-res-more-button").html("<button onclick='view_articles(\""+str+"\","+page+");'>Hämta fler (sida "+page+" av "+Math.ceil(pages)+")</button>").trigger('create');
+      $("#search-res-more-button").html("<button onclick='view_articles(\""+str+"\","+page+");'>Hämta fler (visar "+(page-1)*page_size+" av "+tot_art+")</button>").trigger('create');
 
-      if (tot_art == 0) {
+	  // page has value 2 on first page
+      if (tot_art == 0 && page == 2) {
         $("#articles").append("<li style='margin-left:20px;margin-top:100px;'>Din sökning genererade inga resultat</li>");
       }
 
