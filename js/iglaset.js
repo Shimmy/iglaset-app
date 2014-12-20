@@ -762,6 +762,7 @@ function article_line(xml, htmlid) {
 
 	 		user_rating_icon = "<span class='badge badge-user-rating pull-right'>"+user_rating+"  <span class='glyphicon glyphicon-ok'></span></span>";
 	 		avg_rating_icon = "<span class='badge badge-average-rating pull-right'>"+Math.floor(avg_rating)+" <span class='glyphicon glyphicon-stats'></span></span>";
+  			var nr_ratings_icon = "<span class='badge badge-nr-ratings pull-right'>"+ratings+" <span class='glyphicon glyphicon-star'></span></span>";
 	 		if (est_rate > 4) {
  				estimated_rating_icon = "<span class='badge badge-est-rating pull-right'>"+est_rate+" <span class='glyphicon glyphicon-thumbs-up'></span></span>";
  			} else {
@@ -795,9 +796,18 @@ function article_line(xml, htmlid) {
 	 		var est_rate = $(this).find('estimated_rating').text();
 	 		var list_comment = $(this).find('list_comment').text();
 
-		  	$("#"+htmlid).append("<li class='article-line'><a href='#article-page' onclick='viewarticle("+artid+")'><div class='thumb-wrap'><img style='margin-left:10px;' title='"+image+"' class='artimg' src='img/glasses-crop.png' onerror=\"this.src='img/glasses-crop.png';\"></div>"+name+"<br/><font style='font-size:11px;font-weight:normal;'>"+producer+"<br>Din kommentar: "+list_comment+"</font><span class='ui-li-count count-first'>"+quantity+" st</span><div class='badges'>"+avg_rating_icon+user_rating_icon+estimated_rating_icon+"</div></a></li>");
+		  	$("#"+htmlid).append("<li class='article-line'><a href='#article-page' onclick='viewarticle("+artid+")'>" +
+				"<div class='thumb-wrap'><img style='margin-left:10px;' title='"+image+"' class='artimg' src='img/glasses-crop.png' onerror=\"this.src='img/glasses-crop.png';\"></div>" +
+				""+name+"<br/><font style='font-size:11px;font-weight:normal;'>"+producer+"<br>" +
+				"Din kommentar: "+list_comment+"</font><span class='ui-li-count count-first'>"+quantity+" st</span>" +
+				"<div class='badges'>"+avg_rating_icon+user_rating_icon+estimated_rating_icon+nr_ratings_icon+"</div></a></li>");
 	 	} else {
-		  	$("#"+htmlid).append("<li class='article-line'><a href='#article-page' onclick='viewarticle("+artid+")'><div class='thumb-wrap'><img style='margin-left:10px;' title='"+image+"' class='artimg' src='img/glasses-crop.png' onerror=\"this.src='img/glasses-crop.png';\"></div>"+name+"<br/><font style='font-size:11px;font-weight:normal;'>"+producer+"<br>"+origin+" "+origin_country+" "+alc_percent+"</font><div class='badges'>"+avg_rating_icon+user_rating_icon+estimated_rating_icon+"</div></a></li>");
+		  	$("#"+htmlid).append("<li class='article-line'><a href='#article-page' onclick='viewarticle("+artid+")'>" +
+				"<div class='thumb-wrap'><img style='margin-left:10px;' title='"+image+"' class='artimg' src='img/glasses-crop.png' onerror=\"this.src='img/glasses-crop.png';\"></div>" +
+				""+name+"<br/><font style='font-size:11px;font-weight:normal;'>"+producer+"<br>" +
+				""+origin+" "+origin_country+" "+alc_percent+"</font>" +
+				"<div class='badges'>"+avg_rating_icon+user_rating_icon+estimated_rating_icon+nr_ratings_icon+"</div>" +
+				"</a></li>");
 	  	}
 	  	$("#"+htmlid).listview("refresh");
 	  	$(".artimg").each(function(d){
