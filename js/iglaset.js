@@ -106,29 +106,33 @@ function view_articles(str, page) {
 		$("#article-view").hide();
 		if (page==1) {
 			$("#articles").html("");
-			$("#search-res-more-button").hide();		
+			$("#search-res-more-button").hide();
 		}
 
 		$("#search-res").trigger('expand').trigger('updatelayout');
 		$.get("http://www.iglaset.se/articles.xml?order_by="+sort_by+"&user_credentials="+window.localStorage.getItem("token")+"&page="+page+"&search=true&str="+str, function(xml) {
 		 	article_line(xml, "articles");
-			$("#search-res-more-button").show();		
+			$("#search-res-more-button").show();
 		 	page = parseInt(page)+1;
 		 	var tot_art = $(xml).find('articles').attr("total_articles");
 		 	pages = tot_art/10;
 		 	if (pages < (page-1)) {
-					$("#search-res-more-button").hide();		
+					$("#search-res-more-button").hide();
 			}
-			$("#search-res-more-button").html("<button onclick='view_articles(\""+str+"\","+page+");'>Hämta fler (sida "+page+" av "+Math.ceil(pages)+")</button>").trigger('create');
-					 
-			$("#articles").listview("refresh");
-			articles_by_cat_no_data = true;
-		}, "xml").always(function() {
-			$.mobile.loading('hide');
-			$("#articles").show();
-			$("#search-res").show();
-		}).fail(function(){
-			$("#articles").append("<li style='margin-left:20px;margin-top:100px;'>Din sökning genererade inga resultat</li>");
+      $("#search-res-more-button").html("<button onclick='view_articles(\""+str+"\","+page+");'>Hämta fler (sida "+page+" av "+Math.ceil(pages)+")</button>").trigger('create');
+
+      if (tot_art == 0) {
+        $("#articles").append("<li style='margin-left:20px;margin-top:100px;'>Din sökning genererade inga resultat</li>");
+      }
+
+      $("#articles").listview("refresh");
+      articles_by_cat_no_data = true;
+    }, "xml").fail(function(){
+      $("#articles").append("<li style='margin-left:20px;margin-top:100px;'>Sökningen misslyckades</li>");
+    }).always(function() {
+      $.mobile.loading('hide');
+      $("#articles").show();
+      $("#search-res").show();
 		});
 	}
 }
