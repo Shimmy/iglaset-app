@@ -550,7 +550,7 @@ function get_article(artid) {
 	 	} else {
 			// Get estimated rating if not exists
 			uid = parseInt(window.localStorage.getItem("user_id"))
-			$.getJSON( "http://www.vabba.nu/iglaset/vogoo/test.php?action=article&u="+uid+"&a="+artid, function( data ) {		
+			$.getJSON( "http://calc.iglaset.se/api.php?action=article&u="+uid+"&a="+artid, function( data ) {		
 				if (data.rating >4) {
 					thumb = "up";
 				} else {
@@ -1020,7 +1020,7 @@ function force_calculate_recommendations() {
 		$("#calculating-text").show();
 		$("#calculating").show();
 		$("#recommendations-reload-button").hide();
-		$.get("http://vabba.nu/iglaset/vogoo_heroku/api.php?action=update&u="+window.localStorage.getItem("user_id"), function(data) {
+		$.get("http://calc.iglaset.se/api.php?action=update&u="+window.localStorage.getItem("user_id"), function(data) {
 		}).done(function () {
 			$("#calculating-text").hide();
 			$("#calculating").hide();	
@@ -1034,7 +1034,7 @@ function update_recommendations() {
 		$("#calculating-text").show();
 		$("#calculating").show();
 		$("#recommendations-reload-button").hide();
-		$.get("http://vabba.nu/iglaset/vogoo_heroku/api.php?action=update&u="+window.localStorage.getItem("user_id"), function(data) {
+		$.get("http://calc.iglaset.se/api.php?action=update&u="+window.localStorage.getItem("user_id"), function(data) {
 		}).done(function () {
 			recommended_no_data=true;			
 			$("#calculating-text").hide();
