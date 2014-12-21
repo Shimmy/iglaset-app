@@ -1308,13 +1308,11 @@ a.list-group-item.active > .badge,
 .badge-nr-ratings {
   background-color:#CCC68D;
   margin:2px;
-  
   text-align:right;
 }
 .badge-nr-comments {
   background-color:#BBBB88;
   margin:2px;
-  width:50px;
   text-align:right;
 }
 
