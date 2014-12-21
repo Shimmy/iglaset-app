@@ -100,6 +100,7 @@ function set_preferred_store(store_id) {
 
 function view_articles(str, page) {
 	action = "view_articles";
+	page_size = 20;
 	if (str.length>1) {
 		$.mobile.loading('show');
 		$("#comment-list").hide();
@@ -115,13 +116,14 @@ function view_articles(str, page) {
 			$("#search-res-more-button").show();
 		 	page = parseInt(page)+1;
 		 	var tot_art = $(xml).find('articles').attr("total_articles");
-		 	pages = tot_art/10;
-		 	if (pages < (page-1)) {
+		 	pages = tot_art/page_size;
+			if (pages <= (page-1)) {
 					$("#search-res-more-button").hide();
 			}
-      $("#search-res-more-button").html("<button onclick='view_articles(\""+str+"\","+page+");'>Hämta fler (sida "+page+" av "+Math.ceil(pages)+")</button>").trigger('create');
+      $("#search-res-more-button").html("<button onclick='view_articles(\""+str+"\","+page+");'>Hämta fler (visar "+(page-1)*page_size+" av "+tot_art+")</button>").trigger('create');
 
-      if (tot_art == 0) {
+	  // page has value 2 on first page
+      if (tot_art == 0 && page == 2) {
         $("#articles").append("<li style='margin-left:20px;margin-top:100px;'>Din sökning genererade inga resultat</li>");
       }
 
@@ -760,6 +762,7 @@ function article_line(xml, htmlid) {
 
 	 		user_rating_icon = "<span class='badge badge-user-rating pull-right'>"+user_rating+"  <span class='glyphicon glyphicon-ok'></span></span>";
 	 		avg_rating_icon = "<span class='badge badge-average-rating pull-right'>"+Math.floor(avg_rating)+" <span class='glyphicon glyphicon-stats'></span></span>";
+  			var nr_ratings_icon = "<span class='badge badge-nr-ratings pull-right'>"+ratings+" <span class='glyphicon glyphicon-star'></span></span>";
 	 		if (est_rate > 4) {
  				estimated_rating_icon = "<span class='badge badge-est-rating pull-right'>"+est_rate+" <span class='glyphicon glyphicon-thumbs-up'></span></span>";
  			} else {
@@ -793,9 +796,18 @@ function article_line(xml, htmlid) {
 	 		var est_rate = $(this).find('estimated_rating').text();
 	 		var list_comment = $(this).find('list_comment').text();
 
-		  	$("#"+htmlid).append("<li class='article-line'><a href='#article-page' onclick='viewarticle("+artid+")'><div class='thumb-wrap'><img style='margin-left:10px;' title='"+image+"' class='artimg' src='img/glasses-crop.png' onerror=\"this.src='img/glasses-crop.png';\"></div>"+name+"<br/><font style='font-size:11px;font-weight:normal;'>"+producer+"<br>Din kommentar: "+list_comment+"</font><span class='ui-li-count count-first'>"+quantity+" st</span><div class='badges'>"+avg_rating_icon+user_rating_icon+estimated_rating_icon+"</div></a></li>");
+		  	$("#"+htmlid).append("<li class='article-line'><a href='#article-page' onclick='viewarticle("+artid+")'>" +
+				"<div class='thumb-wrap'><img style='margin-left:10px;' title='"+image+"' class='artimg' src='img/glasses-crop.png' onerror=\"this.src='img/glasses-crop.png';\"></div>" +
+				""+name+"<br/><font style='font-size:11px;font-weight:normal;'>"+producer+"<br>" +
+				"Din kommentar: "+list_comment+"</font><span class='ui-li-count count-first'>"+quantity+" st</span>" +
+				"<div class='badges'>"+avg_rating_icon+user_rating_icon+estimated_rating_icon+nr_ratings_icon+"</div></a></li>");
 	 	} else {
-		  	$("#"+htmlid).append("<li class='article-line'><a href='#article-page' onclick='viewarticle("+artid+")'><div class='thumb-wrap'><img style='margin-left:10px;' title='"+image+"' class='artimg' src='img/glasses-crop.png' onerror=\"this.src='img/glasses-crop.png';\"></div>"+name+"<br/><font style='font-size:11px;font-weight:normal;'>"+producer+"<br>"+origin+" "+origin_country+" "+alc_percent+"</font><div class='badges'>"+avg_rating_icon+user_rating_icon+estimated_rating_icon+"</div></a></li>");
+		  	$("#"+htmlid).append("<li class='article-line'><a href='#article-page' onclick='viewarticle("+artid+")'>" +
+				"<div class='thumb-wrap'><img style='margin-left:10px;' title='"+image+"' class='artimg' src='img/glasses-crop.png' onerror=\"this.src='img/glasses-crop.png';\"></div>" +
+				""+name+"<br/><font style='font-size:11px;font-weight:normal;'>"+producer+"<br>" +
+				""+origin+" "+origin_country+" "+alc_percent+"</font>" +
+				"<div class='badges'>"+avg_rating_icon+user_rating_icon+estimated_rating_icon+nr_ratings_icon+"</div>" +
+				"</a></li>");
 	  	}
 	  	$("#"+htmlid).listview("refresh");
 	  	$(".artimg").each(function(d){
