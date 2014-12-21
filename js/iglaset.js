@@ -212,12 +212,9 @@ function view_articles_by_cat(cat, page) {
 	}
 }
 
-var basement_no_data = true;
 function basement_list(page) {
-
 	uid = parseInt(window.localStorage.getItem("user_id"))
-	if (basement_no_data || page != 1) {
-		
+
 	if ( uid>0) {
 	$.mobile.changePage("#basement-list-page");
 
@@ -237,21 +234,21 @@ function basement_list(page) {
 		}
 		$("#basement-more-button").html("<button onclick='basement_list("+page+");'>Hämta fler (sida "+page+" av "+Math.ceil(pages)+")</button>").trigger('create');
 
-	}, "xml").always(function() {
-			$.mobile.loading('hide');
-			basement_no_data = false;
-			$("#basement-list").listview("refresh");
-
-		}).fail(function(){
-			$.mobile.loading('hide');
-			basement_no_data = true;			
+		if (tot_art == 0) {
 			$("#basement-list").append("<li style='margin-left:20px;margin-top:100px;'>Din källare är tom!</li>");
-		});
+		}
+
+	}, "xml").fail(function(){
+		$.mobile.loading('hide');
+		$("#basement-list").append("<li style='margin-left:20px;margin-top:100px;'>Det gick inte att hämta artiklarna i din källare.</li>");
+	}).always(function() {
+		$.mobile.loading('hide');
+		$("#basement-list").listview("refresh");
+	});
 	} else {
 		$.mobile.changePage("#login-page");
 		return false;
 	}
-}
 }
 var purchase_no_data = true;
 function purchase_list(page) {
@@ -978,7 +975,6 @@ function update_list(list, incdec, artid, close_popups) {
 			 if (close_popups){
 			  	$('#scan-choose-popup2').popup("close");
 			 }
-			  	basement_no_data = true;
 				basement_list(1);
 			}).always(function() {
 				$.mobile.loading('hide');
@@ -988,7 +984,6 @@ function update_list(list, incdec, artid, close_popups) {
 			 if (close_popups){
 			  	$('#scan-choose-popup2').popup("close");
 			 }
-			  	basement_no_data = true;			  
 				basement_list(1);
 			}).always(function() {
 				$.mobile.loading('hide');
