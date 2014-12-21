@@ -1308,7 +1308,7 @@ a.list-group-item.active > .badge,
 .badge-nr-ratings {
   background-color:#CCC68D;
   margin:2px;
-  width:50px;
+  
   text-align:right;
 }
 .badge-nr-comments {
