@@ -758,7 +758,7 @@ function article_line(xml, htmlid) {
 	 		var avg_rating_icon = "";
 
 	 		user_rating_icon = "<span class='badge badge-user-rating pull-right'>"+user_rating+"  <span class='glyphicon glyphicon-ok'></span></span>";
-	 		avg_rating_icon = "<span class='badge badge-average-rating pull-right'>"+Math.floor(avg_rating)+" <span class='glyphicon glyphicon-stats'></span></span>";
+	 		avg_rating_icon = "<span class='badge badge-average-rating pull-right'>"+avg_rating+" <span class='glyphicon glyphicon-stats'></span></span>";
   			var nr_ratings_icon = "<span class='badge badge-nr-ratings pull-right'>"+ratings+" <span class='glyphicon glyphicon-star'></span></span>";
 	 		if (est_rate > 4) {
  				estimated_rating_icon = "<span class='badge badge-est-rating pull-right'>"+est_rate+" <span class='glyphicon glyphicon-thumbs-up'></span></span>";
