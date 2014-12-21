@@ -21,15 +21,14 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 	border:0px !important;
 	/*background-position:0px -23px; */
 
-	}
+  }
 .ios {
-  margin-top:20px;
-  background-color:#000;
+  background-size: 100% 95px !important; 
+  padding-top:20px;
+  #margin-top:20px;
 }
 /*
 .ui-header-ios7 {
-background-size: 100% 95px !important; 
-padding-top:18px;
 }
 */
 #main-footer {
