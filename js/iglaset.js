@@ -753,27 +753,28 @@ function article_line(xml, htmlid) {
 	 	
 	 	if (!user_rating) { user_rating="0";}
 	 	if (!est_rate) { est_rate="0";}
-	 		var user_rating_icon = "";
-	 		var estimated_rating_icon = "";
-	 		var avg_rating_icon = "";
+		var user_rating_icon = "";
+		var estimated_rating_icon = "";
+		var avg_rating_icon = "";
 
-	 		user_rating_icon = "<span class='badge badge-user-rating pull-right'>"+user_rating+"  <span class='glyphicon glyphicon-ok'></span></span>";
-	 		avg_rating_icon = "<span class='badge badge-average-rating pull-right'>"+avg_rating+" <span class='glyphicon glyphicon-stats'></span></span>";
-  			var nr_ratings_icon = "<span class='badge badge-nr-ratings pull-right'>"+ratings+" <span class='glyphicon glyphicon-star'></span></span>";
-	 		if (est_rate > 4) {
- 				estimated_rating_icon = "<span class='badge badge-est-rating pull-right'>"+est_rate+" <span class='glyphicon glyphicon-thumbs-up'></span></span>";
- 			} else {
- 				estimated_rating_icon = "<span class='badge badge-est-rating pull-right'>"+est_rate+" <span class='glyphicon glyphicon-thumbs-down'></span></span>";
- 			}
- 			if (est_rate == 0) {
- 				estimated_rating_icon = "";
- 			}
- 			 if (user_rating == 0) {
- 				user_rating_icon = "";
- 			}
- 			 if (avg_rating == 0) {
- 				avg_rating_icon = "";
- 			}
+		user_rating_icon = "<span class='badge badge-user-rating pull-right'>"+user_rating+"  <span class='glyphicon glyphicon-ok'></span></span>";
+		avg_rating_icon = "<span class='badge badge-average-rating pull-right'>"+avg_rating+" <span class='glyphicon glyphicon-stats'></span></span>";
+		var nr_ratings_icon = "<span class='badge badge-nr-ratings pull-right'>"+ratings+" <span class='glyphicon glyphicon-star'></span></span>";
+		var nr_comments_icon = "<span class='badge badge-nr-comments pull-right'>"+comments+" <span class='glyphicon glyphicon-comment'></span></span>";
+		if (est_rate > 4) {
+			estimated_rating_icon = "<span class='badge badge-est-rating pull-right'>"+est_rate+" <span class='glyphicon glyphicon-thumbs-up'></span></span>";
+		} else {
+			estimated_rating_icon = "<span class='badge badge-est-rating pull-right'>"+est_rate+" <span class='glyphicon glyphicon-thumbs-down'></span></span>";
+		}
+		if (est_rate == 0) {
+			estimated_rating_icon = "";
+		}
+		if (user_rating == 0) {
+			user_rating_icon = "";
+		}
+		if (avg_rating == 0) {
+			avg_rating_icon = "";
+		}
  		/*if (parseInt(est_rate) > 0 ) {
 	 		if (parseInt(user_rating) > 0 ) {
 	 		}
@@ -797,13 +798,13 @@ function article_line(xml, htmlid) {
 				"<div class='thumb-wrap'><img style='margin-left:10px;' title='"+image+"' class='artimg' src='img/glasses-crop.png' onerror=\"this.src='img/glasses-crop.png';\"></div>" +
 				""+name+"<br/><font style='font-size:11px;font-weight:normal;'>"+producer+"<br>" +
 				"Din kommentar: "+list_comment+"</font><span class='ui-li-count count-first'>"+quantity+" st</span>" +
-				"<div class='badges'>"+nr_ratings_icon+avg_rating_icon+user_rating_icon+estimated_rating_icon+"</div></a></li>");
+				"<div class='badges'>"+nr_comments_icon+nr_ratings_icon+avg_rating_icon+estimated_rating_icon+user_rating_icon+"</div></a></li>");
 	 	} else {
 		  	$("#"+htmlid).append("<li class='article-line'><a href='#article-page' onclick='viewarticle("+artid+")'>" +
 				"<div class='thumb-wrap'><img style='margin-left:10px;' title='"+image+"' class='artimg' src='img/glasses-crop.png' onerror=\"this.src='img/glasses-crop.png';\"></div>" +
 				""+name+"<br/><font style='font-size:11px;font-weight:normal;'>"+producer+"<br>" +
 				""+origin+" "+origin_country+" "+alc_percent+"</font>" +
-				"<div class='badges'>"+nr_ratings_icon+avg_rating_icon+user_rating_icon+estimated_rating_icon+"</div>" +
+				"<div class='badges'>"+nr_comments_icon+nr_ratings_icon+avg_rating_icon+estimated_rating_icon+user_rating_icon+"</div>" +
 				"</a></li>");
 	  	}
 	  	$("#"+htmlid).listview("refresh");
