@@ -850,21 +850,22 @@ function urldecode(str) {
 }
 
 function ean(ean) {
-//	$.mobile.loading('show');
+	$.mobile.changePage("#search-res-page");
+	$.mobile.loading('show');
 	$("#articles").html("");
 	$.get("http://www.iglaset.se/barcodes/show_by_ean/"+ean+".xml?user_credentials="+window.localStorage.getItem("token"), function(xml) {
 	 	article_line(xml, "articles");
-	//	$.mobile.loading('hide');
 		$("#search-res").show();
 		$("#search-res-more-button").hide("").trigger('updatelayout');
 		if ($(xml).find('article').length <1) {
 			window.localStorage.setItem("latest_scanned_ean", ean);			
-			alert("Hittade ej produkt med EAN:"+ean);	
+			alert("Hittade ej produkt med streckkod: "+ean);
 		}
-	}, "xml");
-
-	$.mobile.changePage("#search-res-page");
-
+	}, "xml").fail(function(){
+		$("#articles").append("<li style='margin-left:20px;margin-top:100px;'>Sökningen misslyckades</li>");
+	}).always(function() {
+		$.mobile.loading('hide');
+	});
 }
 
 function suggest_ean(artid, ean) {
