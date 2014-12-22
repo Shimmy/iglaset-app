@@ -124,10 +124,12 @@ function view_articles(str, page) {
 
 	  // page has value 2 on first page
       if (tot_art == 0 && page == 2) {
-        $("#articles").append("<li style='margin-left:20px;margin-top:100px;'>Din sökning genererade inga resultat</li>");
-      }
+		  $("#articles").append("<li style='margin-left:20px;margin-top:100px;'>Din sökning genererade inga resultat</li>");
+	  } else {
+		  // Only refresh if we show articles
+		  $("#articles").listview("refresh");
+	  }
 
-      $("#articles").listview("refresh");
       articles_by_cat_no_data = true;
     }, "xml").fail(function(){
       $("#articles").append("<li style='margin-left:20px;margin-top:100px;'>Sökningen misslyckades</li>");
