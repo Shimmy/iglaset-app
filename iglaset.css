@@ -137,6 +137,7 @@ h3 {
 }
 .article-line a img {
 	max-height:80px;
+    max-width: 70px;
  }
  .article-line a  {
 	/*background-color: #fff !important;*/	
